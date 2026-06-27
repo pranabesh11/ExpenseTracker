@@ -21,12 +21,13 @@ const Login = () => {
   return (
     <Box
       sx={{
-        height: "100vh",
+        minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
         bgcolor: "#06142e",
+        overflow: "hidden",
       }}
     >
       {/* animated background */}

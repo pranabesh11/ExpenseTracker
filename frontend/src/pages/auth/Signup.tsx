@@ -8,6 +8,7 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ShowWarningNotification } from "../../utilities/ShowNotifications";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -15,6 +16,13 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const submitSignUpData = () => {
+    if(name === "" || email === "" || password === ""){
+      ShowWarningNotification("Enter Credentials To Sign Up")
+      return
+    }
+    console.log("+++====+++", name, email, password)
+  }
 
   return (
     <Box
@@ -81,6 +89,7 @@ const Signup = () => {
         <Button
           fullWidth
           sx={primaryBtn}
+          onClick={submitSignUpData}
         >
           Create account
         </Button>
