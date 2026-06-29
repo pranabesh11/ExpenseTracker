@@ -9,6 +9,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ShowWarningNotification } from "../../utilities/ShowNotifications";
+import { getApiData } from "../../shared/api/get-api-data";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -16,11 +17,16 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const submitSignUpData = () => {
+  const submitSignUpData = async() => {
     if(name === "" || email === "" || password === ""){
       ShowWarningNotification("Enter Credentials To Sign Up")
       return
     }
+    const response = await getApiData({
+      endpoint:"/billbot/signup",
+      payload: {"name":name,"email":email,"password":password}
+    })
+    console.log("this is response", response)
     console.log("+++====+++", name, email, password)
   }
 
