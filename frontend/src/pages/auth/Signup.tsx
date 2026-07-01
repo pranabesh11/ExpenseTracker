@@ -27,6 +27,11 @@ const Signup = () => {
       payload: {"name":name,"email":email,"password":password}
     })
     console.log("this is response", response)
+    if(response?.success){
+      navigate("/emailverify",{
+      state: { email }
+    })
+    }
     console.log("+++====+++", name, email, password)
   }
 

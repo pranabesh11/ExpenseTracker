@@ -1,0 +1,190 @@
+.verification-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #06142e;
+    position: relative;
+    overflow: hidden;
+}
+
+/* soft animated glow background */
+.verification-page::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,153,51,0.25), transparent 60%);
+    top: -150px;
+    left: -150px;
+    filter: blur(40px);
+}
+
+.verification-page::after {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,122,0,0.18), transparent 60%);
+    bottom: -150px;
+    right: -150px;
+    filter: blur(40px);
+}
+
+/* card */
+.verification-card {
+    width: 420px;
+    padding: 40px;
+    border-radius: 18px;
+    text-align: center;
+
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255,255,255,0.10);
+    color: white;
+
+    animation: fadeUp 0.6s ease;
+}
+
+/* email icon */
+.email-icon {
+    width: 80px;
+    height: 80px;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 36px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(135deg, #ff9933, #ff7a00);
+    color: black;
+
+    animation: float 2s ease-in-out infinite;
+}
+
+/* title */
+h2 {
+    margin-top: 18px;
+    color: white;
+}
+
+/* subtitle */
+p {
+    margin-top: 12px;
+    color: #b8c2d9;
+    font-size: 14px;
+}
+
+/* OTP container */
+.otp-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 30px 0;
+}
+
+/* OTP box */
+.otp-input {
+    width: 55px;
+    height: 60px;
+
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+
+    background: rgba(255,255,255,0.05);
+    color: white;
+
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+
+    outline: none;
+    transition: 0.25s;
+}
+
+.otp-input:focus {
+    border-color: #ff9933;
+    box-shadow: 0 0 12px rgba(255,153,51,0.25);
+    transform: translateY(-2px);
+}
+
+/* verify button */
+.verify-btn {
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    background: linear-gradient(135deg, #ff9933, #ff7a00);
+    color: black;
+
+    transition: 0.3s;
+}
+
+.verify-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255,153,51,0.25);
+}
+
+/* resend text */
+.footer {
+    margin-top: 20px;
+    color: #b8c2d9;
+    font-size: 13px;
+}
+
+.resend-btn {
+    margin-top: 10px;
+    background: none;
+    border: none;
+    color: #ff9933;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.resend-btn:hover {
+    text-decoration: underline;
+}
+
+/* animations */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+/* responsive */
+@media (max-width: 500px) {
+    .verification-card {
+        width: 90%;
+        padding: 30px;
+    }
+
+    .otp-input {
+        width: 48px;
+        height: 52px;
+    }
+}
