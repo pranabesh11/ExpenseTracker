@@ -6,6 +6,7 @@ import com.billbot.billbot.entity.auth.User;
 import com.billbot.billbot.exception.auth.UserAlreadyExistsException;
 import com.billbot.billbot.repository.auth.AuthService;
 import com.billbot.billbot.repository.auth.UserRepository;
+import com.billbot.billbot.service.ThirdPartyServices.OtpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final OtpService otpService;
     @Override
     @Transactional
     public SignUpResponse signup(SignUp signUp){
@@ -32,6 +34,9 @@ public class AuthServiceImpl implements AuthService {
         signUpResponse.setId(user.getId());
         signUpResponse.setName(user.getName());
         signUpResponse.setEmail(user.getEmail());
+        int otp = (int)(Math.random() * 90000) + 10000;
+        String otpString = String.valueOf(otp);
+        otpService.sendOtp(signUp.getEmail(),otpString);
         return signUpResponse;
     }
 }
