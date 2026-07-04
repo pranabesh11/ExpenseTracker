@@ -1,9 +1,7 @@
 package com.billbot.billbot.controller;
 
 import com.billbot.billbot.DTO.ApiResponse;
-import com.billbot.billbot.DTO.auth.SignUp;
-import com.billbot.billbot.DTO.auth.SignUpResponse;
-import com.billbot.billbot.DTO.auth.VerifyOtpRequest;
+import com.billbot.billbot.DTO.auth.*;
 import com.billbot.billbot.repository.auth.AuthService;
 import com.billbot.billbot.service.ThirdPartyServices.OtpService;
 import jakarta.validation.Valid;
@@ -32,5 +30,14 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Boolean>> resendOtp(String email){
         authService.resendOtp(email);
         return ResponseEntity.ok(new ApiResponse<>(true, "Opt Send",true));
+    }
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest){
+        LoginResponse loginResponse = authService.login(loginRequest);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Login Successful",loginResponse));
+    }
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<RefreshTokenResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
+        return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
 }

@@ -15,6 +15,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
     private String password;
+    @Column(nullable = false)
     private boolean verified;
 
 }
