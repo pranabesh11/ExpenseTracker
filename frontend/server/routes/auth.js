@@ -13,5 +13,17 @@ const auth = (app)=>{
           res.status(500).json({ error: error.message });
         }
     })
+    app.post("/billbot/verify-otp", async(req, res)=>{
+        try{
+            const response = await callBaseURLApi(
+            "POST",
+            process.env.VERIFY_OTP,
+            req.body,
+        );
+        res.status(200).json(response.data);
+        }catch(error){
+          res.status(500).json({ error: error.message });
+        }
+    })
 }
 export default auth;

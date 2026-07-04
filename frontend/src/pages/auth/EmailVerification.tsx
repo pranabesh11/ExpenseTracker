@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./style/emailverification.css"
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getApiData } from "../../shared/api/get-api-data";
+import { ShowErrorNotification, ShowInfoNotification, ShowWarningNotification } from "../../utilities/ShowNotifications";
 const OTP_LENGTH = 5;
 
 const EmailVerification: React.FC = () => {
@@ -8,6 +10,8 @@ const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
 const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 const location = useLocation();
 const email = location.state?.email;
+const navigate = useNavigate();
+const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     inputRefs.current[0]?.focus();
@@ -61,18 +65,53 @@ const email = location.state?.email;
     inputRefs.current[Math.min(pasted.length, OTP_LENGTH - 1)]?.focus();
   };
 
-  const verifyCode = () => {
+  const verifyCode = async() => {
     const code = otp.join("");
 
     if (code.length !== OTP_LENGTH) {
       alert("Please enter all 5 digits.");
       return;
     }
-
-    alert(`Verification Code: ${code}`);
-
-    // Call your API here
+    setLoading(true)
+    const payload = { email:email, otp:code }
+    try{
+      const response = await getApiData({
+        endpoint:"/billbot/verify-otp",
+        payload: payload
+      })
+      if(response?.success){
+        navigate("/login")
+      }else{
+        ShowWarningNotification(response?.message)
+      }
+    }catch(e){
+      console.log("verify-otp",e);
+    }finally{
+      setLoading(false)
+    }
   };
+  const resendCode = async() => {
+    if(!email){
+      ShowWarningNotification("Try to Sign up again")
+    }
+    try{
+      setLoading(true);
+      const payload = {email:email}
+      const response = await getApiData({
+        endpoint:"/billbot/resend-otp",
+        payload:payload
+      })
+      if(response?.success){
+        ShowInfoNotification("Check your E-Mail");
+      }else{
+        ShowErrorNotification("Re-Try")
+      }
+    }catch(e){
+      console.log("resend-err",e);
+    }finally{
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="verification-page">
@@ -106,14 +145,14 @@ const email = location.state?.email;
           ))}
         </div>
 
-        <button className="verify-btn" onClick={verifyCode}>
+        <button className="verify-btn" onClick={verifyCode} disabled={loading}>
           Verify Email
         </button>
 
         <div className="footer">
           Didn't receive the code?
 
-          <button className="resend-btn">
+          <button className="resend-btn" disabled={loading} onClick={resendCode}>
             Resend Code
           </button>
         </div>

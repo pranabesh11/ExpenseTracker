@@ -1,5 +1,22 @@
-* {
+body {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background: #06142e;
+  overflow: hidden;
+}
+
+/* smooth animated background */
+.auth-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, #0b2a5a, transparent 40%),
+              radial-gradient(circle at 80% 30%, #ff993322, transparent 35%),
+              radial-gradient(circle at 50% 80%, #0b1b3a, transparent 40%);
+  filter: blur(40px);
+  animation: floatBg 10s ease-in-out infinite alternate;
+}
+
+@keyframes floatBg {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
 }

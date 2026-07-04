@@ -8,7 +8,7 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ShowWarningNotification } from "../../utilities/ShowNotifications";
+import { ShowErrorNotification, ShowWarningNotification } from "../../utilities/ShowNotifications";
 import { getApiData } from "../../shared/api/get-api-data";
 
 const Signup = () => {
@@ -17,20 +17,29 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const submitSignUpData = async() => {
     if(name === "" || email === "" || password === ""){
       ShowWarningNotification("Enter Credentials To Sign Up")
       return
     }
-    const response = await getApiData({
-      endpoint:"/billbot/signup",
-      payload: {"name":name,"email":email,"password":password}
-    })
-    console.log("this is response", response)
-    if(response?.success){
-      navigate("/emailverify",{
-      state: { email }
-    })
+    setLoading(true)
+    try{
+      const response = await getApiData({
+        endpoint:"/billbot/signup",
+        payload: {"name":name,"email":email,"password":password}
+      })
+      console.log("this is response", response)
+      if(response?.success){
+        navigate("/emailverify",{
+          state: { email }
+        })
+      }
+    }catch(e){
+      ShowErrorNotification("Sign Up Unsuccessful !")
+      console.log(e);
+    }finally{
+      setLoading(false)
     }
     console.log("+++====+++", name, email, password)
   }
@@ -101,6 +110,8 @@ const Signup = () => {
           fullWidth
           sx={primaryBtn}
           onClick={submitSignUpData}
+          loading={loading}
+          loadingPosition="end"
         >
           Create account
         </Button>

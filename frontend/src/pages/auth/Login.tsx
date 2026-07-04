@@ -1,8 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
   TextField,
   Typography,
   Paper,
@@ -16,7 +14,6 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
 
   return (
     <Box
@@ -57,7 +54,7 @@ const Login = () => {
             mb: 1,
           }}
         >
-          ExpenseTracker
+          BillBot
         </Typography>
 
         <Typography
@@ -105,17 +102,6 @@ const Login = () => {
               background: "rgba(255,255,255,0.05)",
             },
           }}
-        />
-
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={remember}
-              onChange={(e) => setRemember(e.target.checked)}
-              sx={{ color: "#ff9933" }}
-            />
-          }
-          label={<span style={{ color: "#b8c2d9", fontSize: 13 }}>Remember me</span>}
         />
 
         {/* primary button */}
