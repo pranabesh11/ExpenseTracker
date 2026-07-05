@@ -8,13 +8,37 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import { getApiData } from "../../shared/api/get-api-data";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const handleGoogleLogin = async (credentialResponse:any) => {
+    try{
+      const idToken = credentialResponse.credential;
+      const response = await getApiData({
+        endpoint:"/billbot/google/login",
+        payload: {idToken: idToken}
+      })
+      console.log(response);
+    }catch(e){
+      console.log("google login", e)
+    }
+  }
+  const normalSignIn = async () => {
+    try{
+      const response = await getApiData({
+        endpoint:"/billbot/login",
+        payload: {email:email, password:password}
+      })
+      console.log(response);
+    }catch(e){
+      console.log("normal login",e)
+    }
+  }
   return (
     <Box
       sx={{
@@ -120,6 +144,7 @@ const Login = () => {
               boxShadow: "0 10px 20px rgba(255,153,51,0.25)",
             },
           }}
+          onClick={normalSignIn}
         >
           Sign in
         </Button>
@@ -127,17 +152,20 @@ const Login = () => {
         {/* google */}
         <Button
           fullWidth
-          startIcon={<GoogleIcon />}
           sx={{
             mt: 1.5,
             py: 1.1,
             borderRadius: 2,
             color: "white",
-            border: "1px solid rgba(255,255,255,0.12)",
             textTransform: "none",
           }}
         >
-          Continue with Google
+          <GoogleLogin
+            onSuccess={handleGoogleLogin}
+            onError={() => {
+              console.log("Google Login Failed");
+            }}
+          />
         </Button>
 
         {/* switch */}

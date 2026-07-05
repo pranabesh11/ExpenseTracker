@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ShowErrorNotification, ShowWarningNotification } from "../../utilities/ShowNotifications";
 import { getApiData } from "../../shared/api/get-api-data";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -43,6 +44,27 @@ const Signup = () => {
     }
     console.log("+++====+++", name, email, password)
   }
+    const handleGoogleSuccess = async (credentialResponse:any) => {
+      try{
+        const response = await getApiData({
+          endpoint:"/billbot/google/signup",
+          payload: {idToken: credentialResponse.credential}
+        })
+        if(response?.success){
+          navigate("/app/dashboard")
+        }else{
+          ShowErrorNotification(response?.message);
+        }
+        console.log(credentialResponse);
+      }catch(e){
+        console.log("google sign up err", e)
+      }
+    }
+
+    const handleGoogleFailure = () => {
+      ShowErrorNotification("Unable to sign in with Google. Please try again.")
+      console.log("Google Login Failed")
+    }
 
   return (
     <Box
@@ -115,13 +137,15 @@ const Signup = () => {
         >
           Create account
         </Button>
-
+        
         <Button
           fullWidth
-          startIcon={<GoogleIcon />}
           sx={googleBtn}
         >
-          Continue with Google
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleFailure}
+          />
         </Button>
 
         <Typography
@@ -170,7 +194,6 @@ const googleBtn = {
   py: 1.1,
   borderRadius: 2,
   color: "white",
-  border: "1px solid rgba(255,255,255,0.12)",
   textTransform: "none",
 };
 

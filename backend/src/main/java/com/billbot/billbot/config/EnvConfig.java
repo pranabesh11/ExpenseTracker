@@ -18,5 +18,6 @@ public class EnvConfig {
         System.setProperty("SENDER_NAME",dotenv.get("SENDER_NAME"));
         System.setProperty("REDIS_HOST",dotenv.get("REDIS_HOST"));
         System.setProperty("REDIS_PORT",dotenv.get("REDIS_PORT"));
+        System.setProperty("GOOGLE_CLIENT_ID", dotenv.get("GOOGLE_CLIENT_ID"));
     }
 }

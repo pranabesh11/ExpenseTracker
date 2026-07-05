@@ -3,6 +3,7 @@ package com.billbot.billbot.controller;
 import com.billbot.billbot.DTO.ApiResponse;
 import com.billbot.billbot.DTO.auth.*;
 import com.billbot.billbot.repository.auth.AuthService;
+import com.billbot.billbot.repository.auth.GoogleAuthService;
 import com.billbot.billbot.service.ThirdPartyServices.OtpService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final GoogleAuthService googleAuthService;
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<SignUpResponse>> createUser(@Valid @RequestBody SignUp signUp) {
         SignUpResponse signupResponse = authService.signup(signUp);
@@ -39,5 +41,16 @@ public class AuthController {
     @PostMapping("/refreshtoken")
     public ResponseEntity<RefreshTokenResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
+    }
+    @PostMapping("/google/signup")
+    public ResponseEntity<ApiResponse<SignUpResponse>> googleSignUp(@Valid @RequestBody GoogleSignupRequest googleSignupRequest)throws Exception{
+        SignUpResponse signupResponse = googleAuthService.googleSignUp(googleSignupRequest);
+        ApiResponse<SignUpResponse> apiResponse = new ApiResponse<>(true, "User successfully created!", signupResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
+    @PostMapping("/google/login")
+    public ResponseEntity<ApiResponse<LoginResponse>> googleLogin(GoogleLoginRequest loginResponse) throws Exception{
+        LoginResponse loginResponseGoogle = googleAuthService.googleLogin(loginResponse);
+        return ResponseEntity.ok(new ApiResponse<>(true,"Login successful",loginResponseGoogle));
     }
 }

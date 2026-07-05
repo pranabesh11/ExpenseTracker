@@ -16,8 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         );
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(()->new UsernameNotFoundException("No user found !"));
         String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = createRefreshToken(user);
+        String refreshToken = jwtService.createRefreshToken(user);
         return new LoginResponse(
                 accessToken,
                 refreshToken,
@@ -71,18 +69,7 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
     }
-    public String createRefreshToken(User user){
-        String token = jwtService.generateRefreshToken(user);
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setToken(token);
-        refreshToken.setUser(user);
-        refreshToken.setSessionId(UUID.randomUUID());
-        refreshToken.setFamilyId(UUID.randomUUID());
-        refreshToken.setIssuedAt(Instant.now());
-        refreshToken.setExpiresAt(Instant.now().plus(7, ChronoUnit.DAYS));
-        refreshTokenRepository.save(refreshToken);
-        return token;
-    }
+
     public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenRequest.getRefreshToken());
         if (refreshToken == null || refreshToken.getExpiresAt().isBefore(Instant.now())) {
