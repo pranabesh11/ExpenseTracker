@@ -38,7 +38,7 @@ public class AuthController {
         LoginResponse loginResponse = authService.login(loginRequest);
         return ResponseEntity.ok(new ApiResponse<>(true, "Login Successful",loginResponse));
     }
-    @PostMapping("/refreshtoken")
+    @PostMapping("/refreshToken")
     public ResponseEntity<RefreshTokenResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
@@ -52,5 +52,13 @@ public class AuthController {
     public ResponseEntity<ApiResponse<LoginResponse>> googleLogin(GoogleLoginRequest loginResponse) throws Exception{
         LoginResponse loginResponseGoogle = googleAuthService.googleLogin(loginResponse);
         return ResponseEntity.ok(new ApiResponse<>(true,"Login successful",loginResponseGoogle));
+    }
+    @PostMapping("/forgot-password")
+    public boolean forgotPassword( String email){
+        return authService.forgotPassword(email);
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Boolean>> resetPassword(@Valid @RequestBody ResetPassword resetPassword){
+        return ResponseEntity.ok(new ApiResponse<>(true,"Password changed successfully",authService.resetPassword(resetPassword.getToken(), resetPassword.getPassword())));
     }
 }

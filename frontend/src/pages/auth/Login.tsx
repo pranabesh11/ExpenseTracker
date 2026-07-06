@@ -127,6 +127,21 @@ const Login = () => {
             },
           }}
         />
+        <Typography
+          onClick={() => navigate("/forgot-password")}
+          sx={{
+            textAlign: "right",
+            fontSize: 13,
+            color: "#b8c2d9",
+            cursor: "pointer",
+            mb: 2,
+            "&:hover": {
+              color: "#ff9933",
+            },
+          }}
+        >
+          Forgot Password?
+        </Typography>
 
         {/* primary button */}
         <Button
@@ -146,7 +161,7 @@ const Login = () => {
           }}
           onClick={normalSignIn}
         >
-          Sign in
+          Log in
         </Button>
 
         {/* google */}

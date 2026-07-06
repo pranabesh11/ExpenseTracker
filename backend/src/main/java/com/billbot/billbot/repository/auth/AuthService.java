@@ -7,4 +7,6 @@ public interface AuthService {
     void resendOtp(String email);
     LoginResponse login(LoginRequest loginRequest);
     RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
+    boolean forgotPassword(String email);
+    boolean resetPassword(String token, String password);
 }

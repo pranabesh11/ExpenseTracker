@@ -73,4 +73,7 @@ public class JwtService {
         refreshTokenRepository.save(refreshToken);
         return token;
     }
+    public String generateResetToken() {
+        return UUID.randomUUID().toString();
+    }
 }
