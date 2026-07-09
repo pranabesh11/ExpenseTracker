@@ -10,12 +10,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { getApiData } from "../../shared/api/get-api-data";
+import { ShowErrorNotification } from "../../utilities/ShowNotifications";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const handleGoogleLogin = async (credentialResponse:any) => {
     try{
       const idToken = credentialResponse.credential;
@@ -23,20 +25,29 @@ const Login = () => {
         endpoint:"/billbot/google/login",
         payload: {idToken: idToken}
       })
-      console.log(response);
+      console.log("Google login",response);
     }catch(e){
       console.log("google login", e)
     }
   }
   const normalSignIn = async () => {
+    setLoading(true)
     try{
       const response = await getApiData({
         endpoint:"/billbot/login",
         payload: {email:email, password:password}
       })
-      console.log(response);
+      if(response?.success){
+        navigate("/app/dashboard")
+      }else{
+        console.log("//////",response)
+        ShowErrorNotification(response?.message)
+      }
+      console.log("Normal login",response);
     }catch(e){
       console.log("normal login",e)
+    }finally{
+      setLoading(false)
     }
   }
   return (
@@ -160,6 +171,8 @@ const Login = () => {
             },
           }}
           onClick={normalSignIn}
+          loading={loading}
+          loadingPosition="end"
         >
           Log in
         </Button>

@@ -40,8 +40,20 @@ public class WebSecurityConfig {
                 .csrf(csrf->csrf.disable())
                 .sessionManagement((session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)))
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers(
+                                "/auth/login",
+                                "/auth/signup",
+                                "/auth/verify-otp",
+                                "/auth/resend-otp",
+                                "/auth/google/login",
+                                "/auth/google/signup",
+                                "/auth/forgot-password",
+                                "/auth/reset-password"
+                        ).permitAll()
+                        .requestMatchers("/auth/me")
+                        .authenticated()
+                        .anyRequest()
+                        .authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 }

@@ -50,7 +50,7 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
         return response;
     }
     @Override
-    public LoginResponse googleLogin(GoogleLoginRequest googleLoginRequest) throws Exception{
+    public LoginResponseInternal googleLogin(GoogleLoginRequest googleLoginRequest) throws Exception{
         GoogleIdTokenVerifier verifier =
                 new GoogleIdTokenVerifier.Builder(
                         new NetHttpTransport(),
@@ -67,7 +67,7 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
                 .orElseThrow(() -> new RuntimeException("User not found. Please sign up first."));
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.createRefreshToken(user);
-        LoginResponse loginResponse = new LoginResponse();
+        LoginResponseInternal loginResponse = new LoginResponseInternal();
         loginResponse.setAccessToken(accessToken);
         loginResponse.setRefreshToken(refreshToken);
         UserDto userDto = new UserDto(

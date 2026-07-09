@@ -1,3 +1,4 @@
+import api from "./axios-instance"
 import axios from "axios"
 
 export const getApiData = async ({ endpoint, method = "POST", payload }) => {
@@ -13,7 +14,7 @@ export const getApiData = async ({ endpoint, method = "POST", payload }) => {
 				response = await axios.post(endpoint, payload)
 				break
 			case "GET":
-				response = await axios.get(endpoint, payload)
+				response = await axios.get(endpoint, { params: payload })
 				break
 		}
 		if (response.data.statusCode) {

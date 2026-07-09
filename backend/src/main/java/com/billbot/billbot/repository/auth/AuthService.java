@@ -5,8 +5,8 @@ public interface AuthService {
     SignUpResponse signup(SignUp signUp);
     void verifyOtp(VerifyOtpRequest verifyOtpRequest);
     void resendOtp(String email);
-    LoginResponse login(LoginRequest loginRequest);
-    RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
+    LoginResponseInternal login(LoginRequest loginRequest);
+    RefreshTokenResponse refreshToken(String refreshToken);
     boolean forgotPassword(String email);
     boolean resetPassword(String token, String password);
 }

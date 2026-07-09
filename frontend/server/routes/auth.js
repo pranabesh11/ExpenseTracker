@@ -29,7 +29,7 @@ const auth = (app)=>{
         try{
             const response = await callBaseURLApi(
             "POST",
-            process.env.VERIFY_OTP,
+            process.env.GOOGLE_SIGN_UP,
             req.body,
         );
         res.status(200).json(response.data);
@@ -41,7 +41,20 @@ const auth = (app)=>{
         try{
             const response = await callBaseURLApi(
             "POST",
-            process.env.VERIFY_OTP,
+            process.env.LOG_IN,
+            req.body,
+        );
+        res.status(200).json(response.data);
+        }catch(error){
+          res.status(500).json({ error: error.message });
+          console.log("==========>",error)
+        }
+    })
+    app.post("/billbot/google/login", async(req, res)=>{
+        try{
+            const response = await callBaseURLApi(
+            "POST",
+            process.env.GOOGLE_LOG_IN,
             req.body,
         );
         res.status(200).json(response.data);
@@ -49,12 +62,13 @@ const auth = (app)=>{
           res.status(500).json({ error: error.message });
         }
     })
-    app.post("/billbot/google/login", async(req, res)=>{
+    app.get("/billbot/me", async(req, res)=>{
         try{
             const response = await callBaseURLApi(
-            "POST",
-            process.env.VERIFY_OTP,
+            "GET",
+            process.env.ABOUT_ME,
             req.body,
+            req.headers.cookie
         );
         res.status(200).json(response.data);
         }catch(error){

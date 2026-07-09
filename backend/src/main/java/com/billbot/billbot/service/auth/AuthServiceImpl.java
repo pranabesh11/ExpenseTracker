@@ -4,6 +4,7 @@ import com.billbot.billbot.DTO.auth.*;
 import com.billbot.billbot.Templates.EmailTemplateProcessor;
 import com.billbot.billbot.entity.auth.RefreshToken;
 import com.billbot.billbot.entity.auth.User;
+import com.billbot.billbot.exception.auth.InvalidCredentialsException;
 import com.billbot.billbot.exception.auth.UserAlreadyExistsException;
 import com.billbot.billbot.repository.auth.AuthService;
 import com.billbot.billbot.repository.auth.EmailService;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,17 +63,21 @@ public class AuthServiceImpl implements AuthService {
         otpService.sendOtp(signUp.getEmail(),otpString);
         return signUpResponse;
     }
-    public LoginResponse login(LoginRequest loginRequest){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
+    public LoginResponseInternal login(LoginRequest loginRequest){
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword()
+                    )
+            );
+        }catch (BadCredentialsException exception){
+            throw new InvalidCredentialsException("Invalid email or password");
+        }
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(()->new UsernameNotFoundException("No user found !"));
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.createRefreshToken(user);
-        return new LoginResponse(
+        return new LoginResponseInternal(
                 accessToken,
                 refreshToken,
                 new UserDto(
@@ -83,21 +89,18 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
-    public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenRequest.getRefreshToken());
+    @Override
+    public RefreshTokenResponse refreshToken(String token) {
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(token);
         if (refreshToken == null || refreshToken.getExpiresAt().isBefore(Instant.now())) {
-            if (refreshToken != null) {
+            if(refreshToken != null){
                 refreshTokenRepository.delete(refreshToken);
             }
             throw new RuntimeException("Refresh token expired");
         }
         User user = refreshToken.getUser();
         String accessToken = jwtService.generateAccessToken(user);
-        return new RefreshTokenResponse(
-                "new token",
-                accessToken,
-                refreshToken.getToken()
-        );
+        return new RefreshTokenResponse("Token refreshed", accessToken, refreshToken.getToken());
     }
     public void verifyOtp(VerifyOtpRequest verifyOtpRequest){
         boolean isValid = otpService.verifyOtp(verifyOtpRequest.getEmail(),verifyOtpRequest.getOtp());
