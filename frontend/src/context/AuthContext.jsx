@@ -11,6 +11,7 @@ export function AuthProvider({ children }) {
             try {
                 const response = await getApiData({
                     endpoint: "/billbot/me",
+                    method: "GET",
                     payload: {}
                 });
                 setUser(response.data);

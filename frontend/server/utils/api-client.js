@@ -25,6 +25,7 @@ const callBaseURLApi = async (method = "POST", endpoint, dataOrParams = {}, cook
 	} catch (error) {
         console.log("/////////////////////////////////////",error)
 		if (error.response) {
+			console.log("=========================>>>>>>>",error)
         	return error.response;
     	}
     	throw error;
