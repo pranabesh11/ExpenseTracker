@@ -80,5 +80,24 @@ const auth = (app)=>{
           res.status(500).json({ error: error.message });
         }
     })
+    app.post("/billbot/logout", async(req, res)=>{
+        try{
+            const response = await callBaseURLApi(
+            "POST",
+            process.env.LOGOUT,
+            req.body,
+            req.headers.cookie
+        )
+        const cookies = response.headers["set-cookie"]
+        if(cookies){
+            cookies.forEach((cookie)=>{
+                res.append("Set-Cookie", cookie);
+            })
+        }
+        res.status(200).json(response.data);
+        }catch(error){
+          res.status(500).json({ error: error.message });
+        }
+    })
 }
 export default auth;

@@ -1,0 +1,89 @@
+.landing-page {
+    height: 100vh;
+    background: #06142e;
+    padding: 25px 60px;
+    overflow: hidden;
+}
+
+.landing-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.landing-navbar h2 {
+    color: white;
+    margin: 0;
+    font-size: 30px;
+}
+
+.landing-content {
+    height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+}
+
+.landing-left {
+    flex: 1;
+}
+
+.landing-right {
+    flex: 1;
+}
+
+.hero-title {
+    color: white !important;
+    font-size: 52px !important;
+    margin-bottom: 20px !important;
+}
+
+.hero-description {
+    color: #b8c2d9;
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 40px;
+}
+
+.stats {
+    display: flex;
+    gap: 30px;
+}
+
+.stats .ant-statistic {
+    background: rgba(255,255,255,.05);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.stats .ant-statistic-title {
+    color: #b8c2d9;
+}
+
+.stats .ant-statistic-content {
+    color: white;
+}
+
+.feature-card {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px;
+    text-align: center;
+    height: 220px;
+}
+
+.feature-icon {
+    font-size: 34px;
+    color: #ff9933;
+    margin-bottom: 16px;
+}
+
+.feature-card .ant-typography {
+    color: white;
+}
+
+.feature-card p {
+    color: #b8c2d9;
+}

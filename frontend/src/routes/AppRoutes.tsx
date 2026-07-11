@@ -8,8 +8,8 @@ const AppRoutes: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/*" element={<PublicRoutes />} />
         <Route path="/app/*" element={<PrivateRoutes />} />
+        <Route path="/*" element={<PublicRoutes />} />
       </Routes>
     </BrowserRouter>
   );

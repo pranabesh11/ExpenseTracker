@@ -1,26 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-
-import Dashboard from "../pages/dashboard/Dashboard";
 import MainLayout from "../layout/MainLayout";
+import { menuItems } from "../pages/dashboard/MenuItems";
+import { AuthContext } from "../context/AuthContext";
+import NotFound from "../pages/NotFound";
 
-const isAuthenticated = (): boolean => {
-//   return Boolean(localStorage.getItem("token"));
-    return true;
-};
 
 const PrivateRoutes: React.FC = () => {
-  if (!isAuthenticated()) {
-    return <Navigate to="/login" replace />;
+  const { user, loading } = useContext(AuthContext);
+  if(loading){
+    return <div>Loading ....</div>
   }
-
-  return (
+  if(!user){
+    return <Navigate to="/login" replace/>
+  }
+  return(
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path="dashboard" element={<Dashboard />} />
+        {menuItems.map((item) => (
+          <Route
+              key={item.key}
+              path={item.key.replace("/", "")}
+              element={item.element}
+            />
+        ))}
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
-  );
+  )
 };
 
 export default PrivateRoutes;

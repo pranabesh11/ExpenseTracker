@@ -1,4 +1,3 @@
-import api from "./axios-instance"
 import axios from "axios"
 
 export const getApiData = async ({ endpoint, method = "POST", payload }) => {

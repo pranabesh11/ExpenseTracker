@@ -119,6 +119,7 @@ public class AuthController {
                 user.getEmail(),
                 user.isVerified()
         );
+        System.out.println("================me====================>"+ authentication);
         return ResponseEntity.ok(new ApiResponse<>(true,"User fetched successfully",userDto));
     }
     @PostMapping("/logout")
@@ -137,6 +138,7 @@ public class AuthController {
                 .path("/")
                 .maxAge(0)
                 .build();
+        System.out.println("================logout====================>"+ accessCookie+"   "+ refreshCookie);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE,accessCookie.toString())
                 .header(HttpHeaders.SET_COOKIE,refreshCookie.toString())

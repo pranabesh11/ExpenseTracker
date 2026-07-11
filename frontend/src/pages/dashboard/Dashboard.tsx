@@ -1,4 +1,6 @@
 import React from "react";
+import Navbar from "../../layout/Navbar";
+import Sidebar from "../../layout/Sidebar";
 
 type StatCardProps = {
   title: string;
@@ -18,68 +20,10 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle }) => {
 
 const Dashboard: React.FC = () => {
   return (
-    <div style={styles.container}>
-      {/* Sidebar */}
-      <aside style={styles.sidebar}>
-        <h2 style={styles.logo}>MyApp</h2>
-        <nav>
-          <ul style={styles.navList}>
-            <li>Dashboard</li>
-            <li>Analytics</li>
-            <li>Users</li>
-            <li>Settings</li>
-          </ul>
-        </nav>
-      </aside>
-
-      {/* Main Content */}
-      <div style={styles.main}>
-        {/* Topbar */}
-        <header style={styles.topbar}>
-          <h2>Dashboard</h2>
-          <button style={styles.button}>Logout</button>
-        </header>
-
-        {/* Stats */}
-        <section style={styles.statsGrid}>
-          <StatCard title="Users" value={1240} subtitle="Active this month" />
-          <StatCard title="Revenue" value="$8,450" subtitle="This month" />
-          <StatCard title="Orders" value={320} subtitle="Completed" />
-          <StatCard title="Feedback" value={87} subtitle="New reviews" />
-        </section>
-
-        {/* Table */}
-        <section style={styles.tableSection}>
-          <h3>Recent Activity</h3>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Action</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Alice</td>
-                <td>Signed up</td>
-                <td>Success</td>
-              </tr>
-              <tr>
-                <td>Bob</td>
-                <td>Purchased plan</td>
-                <td>Completed</td>
-              </tr>
-              <tr>
-                <td>Charlie</td>
-                <td>Requested refund</td>
-                <td>Pending</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-      </div>
-    </div>
+    <>
+      <Navbar/>
+      <Sidebar/>
+    </>
   );
 };
 
