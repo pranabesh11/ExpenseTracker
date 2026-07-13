@@ -25,10 +25,14 @@ const Landing = () => {
       {/* Navbar */}
       <header className="landing-navbar">
         <h2>BillBot</h2>
-
-        <Button type="primary" onClick={() => navigate("/login")}>
-          Login
-        </Button>
+        <div>
+          <Button  onClick={() => navigate("/login")} style={{marginRight:"5px", backgroundColor:"#ff9933", border:"none", color:"black"}}>
+            Login
+          </Button>
+          <Button  onClick={() => navigate("/signup")} style={{marginLeft:"5px", backgroundColor:"#ff9933", border:"none", color:"black"}}>
+            Signup
+          </Button>
+        </div>
       </header>
 
       {/* Main Content */}
