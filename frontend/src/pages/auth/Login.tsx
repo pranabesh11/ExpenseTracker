@@ -27,7 +27,12 @@ const Login = () => {
         endpoint:"/billbot/google/login",
         payload: {idToken: idToken}
       })
-      console.log("Google login",response);
+      if(response?.success){
+        await fetchUser()
+        navigate("/app/dashboard")
+      }else{
+        ShowErrorNotification(response?.message)
+      }
     }catch(e){
       console.log("google login", e)
     }

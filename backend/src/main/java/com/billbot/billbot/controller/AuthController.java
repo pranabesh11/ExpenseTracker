@@ -97,7 +97,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
     @PostMapping("/google/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> googleLogin(GoogleLoginRequest googleLoginRequest) throws Exception{
+    public ResponseEntity<ApiResponse<LoginResponse>> googleLogin(@Valid @RequestBody GoogleLoginRequest googleLoginRequest) throws Exception{
         LoginResponseInternal loginResponseGoogle = googleAuthService.googleLogin(googleLoginRequest);
         return addAuthCookies(ResponseEntity.ok(),loginResponseGoogle)
                 .body(new ApiResponse<>(true,"Login successful",new LoginResponse(loginResponseGoogle.getUserDto())));

@@ -138,15 +138,25 @@ const Signup = () => {
           Create account
         </Button>
         
-        <Button
-          fullWidth
-          sx={googleBtn}
+        <Box sx={{ mt: 1.5 }}>
+        <Typography
+          sx={{
+            color: "#b8c2d9",
+            fontSize: 12,
+            mb: 1,
+            textAlign: "center",
+          }}
         >
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleFailure}
-          />
-        </Button>
+          Or sign up with Google
+        </Typography>
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleFailure}
+          text="signup_with"
+          size="large"
+          shape="rectangular"
+        />
+      </Box>
 
         <Typography
           onClick={() => navigate("/login")}

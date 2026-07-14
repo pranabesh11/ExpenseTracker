@@ -11,7 +11,8 @@ const callBaseURLApi = async (method = "POST", endpoint, dataOrParams = {}, cook
 		const config = {
 			method: method.toLowerCase(),
 			url: `${process.env.BASE_URL}${endpoint}`,
-			headers
+			headers,
+			withCredentials:true
 		}
 
 		if (method.toUpperCase() === "GET") {
@@ -19,8 +20,9 @@ const callBaseURLApi = async (method = "POST", endpoint, dataOrParams = {}, cook
 		} else {
 			config.data = dataOrParams
 		}
+		console.log("===============================config=============>>>>>>>",config)
 		const response = await axios(config)
-		console.log("=========================>>>>>>>",response)
+		console.log("================================response=======================>>>>>>>",response)
 		return response
 	} catch (error) {
         console.log("/////////////////////////////////////",error)
