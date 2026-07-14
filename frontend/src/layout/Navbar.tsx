@@ -1,20 +1,23 @@
 import { LogoutOutlined, MenuOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Drawer, Menu } from "antd";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./style/navbar.css"
 import { menuItems } from "../pages/dashboard/MenuItems";
 import { handleLogout } from "../shared/shared-functions";
 import { Logout } from "@mui/icons-material";
+import { AuthContext } from "../context/AuthContext";
 
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+    const { fetchUser } = useContext(AuthContext);
     const logout = async () => {
         const success = await handleLogout();
         if(success){
+            await fetchUser()
             navigate("/login");
         }
     }

@@ -7,10 +7,11 @@ import {
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { getApiData } from "../../shared/api/get-api-data";
 import { ShowErrorNotification } from "../../utilities/ShowNotifications";
+import { AuthContext } from "../../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { fetchUser } = useContext(AuthContext);
   const handleGoogleLogin = async (credentialResponse:any) => {
     try{
       const idToken = credentialResponse.credential;
@@ -38,6 +40,7 @@ const Login = () => {
         payload: {email:email, password:password}
       })
       if(response?.success){
+        await fetchUser()
         navigate("/app/dashboard")
       }else{
         console.log("//////",response)
