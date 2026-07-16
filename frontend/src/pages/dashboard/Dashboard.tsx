@@ -21,7 +21,6 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle }) => {
 const Dashboard: React.FC = () => {
   return (
     <>
-      <Navbar/>
       <Sidebar/>
     </>
   );

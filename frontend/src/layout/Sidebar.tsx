@@ -3,10 +3,11 @@ import { useLocation } from "react-router-dom";
 import "./style/sidebar.css"
 import { menuItems } from "../pages/dashboard/MenuItems";
 import { handleLogout } from "../shared/shared-functions";
-import { Logout } from "@mui/icons-material";
+import { Height, Logout } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
+import { Avatar, Button } from "@mui/material";
 
 const Sidebar = () => {
     const location = useLocation();
@@ -21,6 +22,9 @@ const Sidebar = () => {
     }
   return (
     <div className="sidebar">
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", margin:"5px"}}>
+        <Avatar alt="Cindy Baker" src="../../public/profile_pic.jpg" sx={{ width: { lg: 80 }, height: { lg: 80 }}}/>
+      </div>
       <Menu
         mode="inline"
         selectedKeys={[location.pathname]}
