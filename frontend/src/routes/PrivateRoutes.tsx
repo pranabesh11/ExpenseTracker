@@ -17,10 +17,11 @@ const PrivateRoutes: React.FC = () => {
   return(
     <Routes>
       <Route element={<MainLayout />}>
+      <Route index element={<Navigate to="dashboard" replace />} />
         {menuItems.map((item) => (
           <Route
               key={item.key}
-              path={item.key.replace("/", "")}
+              path={item.key}
               element={item.element}
             />
         ))}

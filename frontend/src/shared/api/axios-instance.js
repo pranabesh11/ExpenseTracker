@@ -29,7 +29,7 @@ api.interceptors.response.use(
             Access token expired
         */
         if(
-            error.response?.status === 401 &&
+            (error.response?.status === 401 || error.response?.status === 403) &&
             !originalRequest._retry
         ){
             if(isRefreshing){

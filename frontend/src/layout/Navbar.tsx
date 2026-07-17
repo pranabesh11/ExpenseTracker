@@ -49,7 +49,7 @@ const Navbar = () => {
       >
         <Menu
           mode="inline"
-          selectedKeys={[location.pathname]}
+          selectedKeys={[location.pathname.split("/")[2]]}
           items={[
                 ...menuItems,
                 {

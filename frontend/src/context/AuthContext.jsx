@@ -19,6 +19,7 @@ export function AuthProvider({ children }) {
             });
 
             setUser(response.data);
+            startRefreshTimer();
             return response.data;
         } catch {
             setUser(null);
@@ -27,6 +28,25 @@ export function AuthProvider({ children }) {
             setLoading(false);
         }
     }
+    const refreshToken = async () => {
+        try {
+            await getApiData({
+                endpoint: "/billbot/refreshToken",
+                method: "POST",
+                payload: {}
+            });
+
+            startRefreshTimer();
+        } catch {
+            setUser(null);
+        }
+    };
+
+    const startRefreshTimer = () => {
+        setTimeout(() => {
+            refreshToken();
+        }, 14 * 60 * 1000);
+    };
 
     useEffect(() => {
         fetchUser();

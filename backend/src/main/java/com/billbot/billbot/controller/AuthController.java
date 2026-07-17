@@ -72,6 +72,7 @@ public class AuthController {
     }
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(HttpServletRequest request){
+        System.out.println("=================refreshToken===================>"+ getRefreshTokenFromCookie(request));
         String refreshToken = getRefreshTokenFromCookie(request);
         if(refreshToken == null){
             return ResponseEntity
@@ -86,6 +87,7 @@ public class AuthController {
                         .path("/")
                         .maxAge(Duration.ofMinutes(15))
                         .build();
+        System.out.println("=================refreshToken return===================>"+ accessCookie);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
                 .body(new ApiResponse<>(true,"Token refreshed",null));

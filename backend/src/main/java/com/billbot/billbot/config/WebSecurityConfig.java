@@ -48,7 +48,8 @@ public class WebSecurityConfig {
                                 "/auth/google/login",
                                 "/auth/google/signup",
                                 "/auth/forgot-password",
-                                "/auth/reset-password"
+                                "/auth/reset-password",
+                                "/auth/refreshToken"
                         ).permitAll()
                         .requestMatchers("/auth/me")
                         .authenticated()

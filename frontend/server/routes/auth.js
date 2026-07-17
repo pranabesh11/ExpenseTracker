@@ -84,6 +84,25 @@ const auth = (app)=>{
           res.status(500).json({ error: error.message });
         }
     })
+    app.post("/billbot/refreshToken", async (req, res) => {
+        try {
+            const response = await callBaseURLApi(
+                "POST",
+                process.env.REFRESH,
+                req.body,
+                req.headers.cookie
+            );
+            // Forward Spring's cookies to the browser
+            const cookies = response.headers["set-cookie"];
+            if (cookies) {
+                res.setHeader("Set-Cookie", cookies);
+            }
+            res.status(response.status).json(response.data);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: error.message });
+        }
+    });
     app.post("/billbot/logout", async(req, res)=>{
         try{
             const response = await callBaseURLApi(
