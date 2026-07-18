@@ -1,0 +1,173 @@
+.groupsContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background: #f5f5f5;
+}
+
+/* LEFT */
+
+.groupList {
+    width: 320px;
+    border-right: 1px solid #ddd;
+    background: white;
+    overflow-y: auto;
+}
+
+.groupList h2 {
+    padding: 20px;
+    margin: 0;
+    border-bottom: 1px solid #eee;
+}
+
+.groupItem {
+    padding: 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.groupItem:hover {
+    background: #f8f8f8;
+}
+
+.groupItem.active {
+    background: #e6f4ff;
+}
+
+.groupName {
+    font-weight: 600;
+}
+
+.lastMessage {
+    margin-top: 4px;
+    font-size: 13px;
+    color: gray;
+}
+
+/* RIGHT */
+
+.chatWindow {
+    flex: 1;
+    height: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    background-image: url("/whatsapp-bg.png");
+    background-repeat: repeat;
+    background-size: 512px auto;
+}
+
+.chatHeader {
+    padding: 20px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+.messages {
+    flex: 1;
+    min-height: 0;
+
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+    padding: 20px;
+}
+.message {
+    max-width: 65%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    line-height: 1.5;
+    font-size: 14px;
+    word-break: break-word;
+
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+}
+
+.received {
+    align-self: flex-start;
+    background: #fff;
+}
+
+.sent {
+    align-self: flex-end;
+    margin-left: auto;
+    background: #d9fdd3;
+}
+
+.chatInput {
+    flex-shrink: 0;
+
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+
+    background: white;
+    border-top: 1px solid #ddd;
+}
+
+.messageInput {
+    flex: 1;
+}
+
+.backButton {
+    margin: 10px;
+}
+.groupHeader{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding:20px;
+    border-bottom:1px solid #eee;
+}
+
+.groupItem{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.groupInfo{
+    flex:1;
+    min-width:0;
+}
+
+.chatHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:20px;
+    background:white;
+    border-bottom:1px solid #ddd;
+}
+
+.chatHeaderLeft{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+.messagesContent{
+    margin-top: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+/* MOBILE */
+
+@media (max-width: 991px) {
+
+    .groupList,
+    .chatWindow {
+        width: 100%;
+        height: 100%;
+    }
+
+    .groupsContainer {
+        display: block;
+    }
+}

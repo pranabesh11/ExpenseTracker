@@ -37,7 +37,7 @@ const Navbar = () => {
             onClick={() => setOpen(true)}
           />
 
-          <Avatar size={40} icon={<UserOutlined />} />
+          <Avatar size={40} icon={<UserOutlined />} src="../../public/profile_pic.jpg"/>
         </div>
       </header>
 

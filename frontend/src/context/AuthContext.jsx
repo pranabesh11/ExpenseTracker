@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const fetchUser = async () => {
         try {
+            refreshToken();
             const response = await getApiData({
                 endpoint: "/billbot/me",
                 method: "GET",

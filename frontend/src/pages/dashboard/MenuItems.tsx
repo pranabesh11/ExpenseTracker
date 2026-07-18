@@ -1,11 +1,13 @@
 import {
   DashboardOutlined,
-  WalletOutlined,
   BarChartOutlined,
-  SettingOutlined
+  SettingOutlined,
+  UsergroupAddOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Dashboard from "./Dashboard";
+import Groups from "../groups/Groups";
+import Reports from "../reports/Reports";
 
 
 
@@ -17,16 +19,16 @@ export const menuItems = [
     element: <Dashboard />,
   },
   {
-    key: "expenses",
-    icon: <WalletOutlined />,
-    label: <Link to="/app/expenses">Expenses</Link>,
-    element: <></>,
+    key: "groups",
+    icon: <UsergroupAddOutlined />,
+    label: <Link to="/app/groups">Groups</Link>,
+    element: <Groups/>,
   },
   {
     key: "reports",
     icon: <BarChartOutlined />,
     label: <Link to="/app/reports">Reports</Link>,
-    element: <></>
+    element: <Reports/>
   },
   {
     key: "settings",
