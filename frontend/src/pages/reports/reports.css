@@ -5,6 +5,8 @@
     display:flex;
     flex-direction:column;
     gap:20px;
+
+    overflow:hidden;
 }
 
 .reportCard{
@@ -20,16 +22,13 @@
     font-size:20px;
     font-weight:600;
 }
-
-.reportCard:first-child{
-    height:25%;
-}
-
 .gridCard{
     flex:1;
 
     display:flex;
     flex-direction:column;
+
+    min-height:0;
 }
 .reportHeader {
     margin-bottom: 15px;
@@ -47,3 +46,30 @@
     font-size: 14px;
     color: #777;
 }
+.reportsTop{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.reportsTop h1{
+    margin:0;
+    font-size:28px;
+    font-weight:700;
+}
+
+.reportsActions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.reportCard{
+    flex-shrink:0;
+}
+
+/* .reportCard:first-of-type{
+    height:340px;
+} */

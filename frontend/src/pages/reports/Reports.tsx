@@ -2,6 +2,8 @@ import React from "react";
 import "./reports.css";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import ReactECharts from "echarts-for-react";
+import { DatePicker, Button } from "antd";
+const { RangePicker } = DatePicker;
 
 
 const columns: GridColDef[] = [
@@ -81,24 +83,30 @@ const rows = [
   },
 ];
 const Reports: React.FC = () => {
+    const today = new Date().toISOString().slice(0, 10);
     function getVirtualData() {
         const data = [];
 
-        const start = new Date(2026, 0, 1);   // Jan 1
-        const end = new Date(2026, 11, 31);   // Dec 31
+        const start = new Date(2026, 0, 1);
+        const end = new Date(2026, 11, 31);
 
         while (start <= end) {
+            const date = start.toISOString().slice(0, 10);
             const month = start.getMonth();
 
-            data.push([
-                start.toISOString().slice(0, 10),
+            let value;
 
-                // Fill only July with values
-                month === 6 ? Math.floor(Math.random() * 100) : 0,
-            ]);
+            if (date > today) {
+                value = -1; // future
+            } else {
+                value = month === 6 ? Math.floor(Math.random() * 100) : 0;
+            }
+
+            data.push([date, value]);
 
             start.setDate(start.getDate() + 1);
         }
+
         return data;
     }
 
@@ -106,32 +114,57 @@ const Reports: React.FC = () => {
         tooltip: {},
 
         visualMap: {
-            min: 0,
+            show: false,
+            min: -1,
             max: 100,
             calculable: true,
+
             orient: "horizontal",
             left: "center",
-            itemWidth: 20,
-            itemHeight: 100,
             bottom: 10,
+
+            inRange: {
+                color: [
+                    "#ececec",   // future
+                    "#f5f5f5",
+                    "#d6e685",
+                    "#8cc665",
+                    "#44a340",
+                    "#1e6823",
+                ],
+            },
         },
 
         calendar: {
             top: 30,
             left: 30,
             right: 30,
-
             range: "2026",
 
             cellSize: ["auto", 14],
 
             splitLine: {
-                show: false,
+                show: true,
+                lineStyle: {
+                    color: "#d9d9d9",
+                    width: 1,
+                },
             },
 
             itemStyle: {
                 borderWidth: 0.5,
                 borderColor: "#eee",
+            },
+
+            monthLabel: {
+                nameMap: "en",
+                margin: 12,
+                color: "#555",
+                fontWeight: 600,
+            },
+
+            dayLabel: {
+                firstDay: 1,
             },
 
             yearLabel: {
@@ -143,33 +176,61 @@ const Reports: React.FC = () => {
             type: "heatmap",
             coordinateSystem: "calendar",
             data: getVirtualData(),
+
+            itemStyle: {
+                borderRadius: 2,
+            },
+
+            emphasis: {
+                itemStyle: {
+                    borderColor: "#333",
+                    borderWidth: 1,
+                },
+            },
         },
     };
 
     return (
         <div className="reports">
+            <div className="reportsTop">
+                <h1>Reports</h1>
 
+                <div className="reportsActions">
+                    <RangePicker />
+
+                    <Button type="primary">
+                        Fetch Details
+                    </Button>
+                </div>
+            </div>
             <div className="reportCard">
 
-                <h2>Monthly Activity</h2>
+                <div className="reportHeader">
+                    <h2>Monthly Activity</h2>
+                    <p>Daily transaction activity for the selected period.</p>
+                </div>
 
                 <ReactECharts
                     option={option}
-                    style={{ height: 250 }}
+                    style={{ height: 150 }}
                 />
 
             </div>
 
             <div className="reportCard gridCard">
 
-                <h2>Transactions</h2>
+                <div className="reportHeader">
+                    <h2>Transactions</h2>
+                    <p>Detailed transaction list.</p>
+                </div>
 
                 <div
                     style={{
-                        height: 500,
+                        flex: 1,
+                        minHeight: 0,
                         width: "100%",
                     }}
-                    >
+                >
                     <DataGrid
                         rows={rows}
                         columns={columns}

@@ -19,16 +19,54 @@
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 5px;
 }
 
 .hamburger-btn {
   display: none;
   color: white !important;
 }
+.languageSelect .ant-select-selector{
+    height:28px !important;
+    padding:0 8px !important;
+
+    border-radius:6px !important;
+}
+
+.languageSelect .ant-select-selection-item{
+    font-size:12px;
+    display:flex;
+    align-items:center;
+}
+
+.langOption{
+    display:flex;
+    align-items:center;
+    gap:5px;
+
+    font-size:12px;
+    line-height:1;
+}
+
+.langOption img{
+    width:14px;
+    height:10px;
+    object-fit:cover;
+}
 
 @media (max-width: 768px) {
   .hamburger-btn {
     display: inline-flex;
   }
+  .languageSelect{
+      width:100px !important;
+    }
+
+    .languageSelect .ant-select-selection-item{
+        font-size:11px;
+    }
+
+    .langOption{
+        font-size:11px;
+    }
 }

@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Groups from "../groups/Groups";
 import Reports from "../reports/Reports";
+import Settings from "../settings/Settings";
 
 
 
@@ -34,6 +35,6 @@ export const menuItems = [
     key: "settings",
     icon: <SettingOutlined />,
     label: <Link to="/app/settings">Settings</Link>,
-    element: <></>
+    element: <Settings/>
   },
 ];

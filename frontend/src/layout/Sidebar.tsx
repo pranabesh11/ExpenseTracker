@@ -22,8 +22,9 @@ const Sidebar = () => {
     }
   return (
     <div className="sidebar">
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", margin:"5px"}}>
+      <div className="profileSection">
         <Avatar alt="Cindy Baker" src="../../public/profile_pic.jpg" sx={{ width: { lg: 80 }, height: { lg: 80 }}}/>
+        <div className="profileName"> Pranabesh Pratihar </div>
       </div>
       <Menu
         mode="inline"

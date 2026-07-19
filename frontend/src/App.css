@@ -6,3 +6,12 @@
   --accent: #ff9933;    /* saffron */
   --accent-hover: #e8891f;
 }
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background:#bbb;
+    border-radius:10px;
+}
