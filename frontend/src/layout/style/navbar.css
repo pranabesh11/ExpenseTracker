@@ -27,9 +27,9 @@
   color: white !important;
 }
 .languageSelect .ant-select-selector{
-    height:28px !important;
+    height:30px !important;
     padding:0 8px !important;
-
+    height: 25px;
     border-radius:6px !important;
 }
 
@@ -45,7 +45,7 @@
     gap:5px;
 
     font-size:12px;
-    line-height:1;
+    line-height:2;
 }
 
 .langOption img{
@@ -60,6 +60,7 @@
   }
   .languageSelect{
       width:100px !important;
+      height: 15px;
     }
 
     .languageSelect .ant-select-selection-item{

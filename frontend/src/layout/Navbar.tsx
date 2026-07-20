@@ -1,4 +1,4 @@
-import { LogoutOutlined, MenuOutlined, MoonOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
+import { MenuOutlined, MoonOutlined, SunOutlined } from "@ant-design/icons";
 import { Button, Drawer, Flex, Menu, Select, Switch } from "antd";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,7 +8,8 @@ import { handleLogout } from "../shared/shared-functions";
 import { Logout } from "@mui/icons-material";
 import { AuthContext } from "../context/AuthContext";
 import Flag from "react-world-flags";
-import { Avatar } from "@mui/material";
+import { Avatar, Badge, IconButton } from "@mui/material";
+import EmailIcon from '@mui/icons-material/Email';
 
 
 
@@ -80,6 +81,11 @@ const Navbar = () => {
               </Flex>
             }
           />
+          <IconButton aria-label="show more than 999 unread messages">
+            <Badge color="secondary" badgeContent={1000} max={999}>
+              <EmailIcon />
+            </Badge>
+          </IconButton>
           <Button
             className="hamburger-btn"
             type="text"

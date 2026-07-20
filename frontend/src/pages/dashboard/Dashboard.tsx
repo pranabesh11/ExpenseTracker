@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import "./dashboard.css"
 import { Button, Card, DatePicker, Flex, Form, Typography} from "antd";
 const { RangePicker } = DatePicker;
 import ReactECharts from "echarts-for-react";
 import { DeleteFilled, EditOutlined, EyeFilled, EyeOutlined } from "@ant-design/icons";
+import IncomeExpenseModal from "../popups/IncomeExpenseModal ";
 
 const Dashboard: React.FC = () => {
   console.log("Dashboard mounted");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
   const data = [
     { type: "Food", value: 27 },
     { type: "Travel", value: 25 },
@@ -44,7 +54,11 @@ const Dashboard: React.FC = () => {
               <RangePicker />
             </Form.Item>
             <Button type="primary">Get Details</Button>
-            <Button type="primary">Add Income / Expense</Button>
+            <IncomeExpenseModal
+              open={isModalOpen}
+              onClose={handleClose}
+            />
+            <Button type="primary" onClick={handleOpen}>Add Income / Expense</Button>
           </div>
         </div>
       </div>

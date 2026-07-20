@@ -7,6 +7,8 @@ import {
     Upload,
     Select,
     Divider,
+    Modal,
+    Image 
 } from "antd";
 import {
     CameraOutlined,
@@ -37,6 +39,9 @@ const dummyFields = [
 ];
 
 const Settings: React.FC = () => {
+    const [profileImage, setProfileImage] = useState<string | null>(null);
+    const [qrImage, setQrImage] = useState<string | null>(null);
+    const [showImg, setShowImg] = useState<boolean>(false);
     const [form, setForm] = useState(
         dummyFields.reduce(
             (acc, item) => ({
@@ -65,26 +70,36 @@ const Settings: React.FC = () => {
 
                     <Avatar
                         size={130}
-                        icon={<UserOutlined />}
+                        src={profileImage || undefined}
+                        icon={!profileImage && <UserOutlined />}
                     />
 
                     <div className="avatarActions">
 
                         <Button
                             icon={<EyeOutlined />}
+                            onClick={()=>setShowImg(true)}
                         >
                             View
                         </Button>
 
-                        <Button
-                            icon={<CameraOutlined />}
+                        <Upload
+                            showUploadList={false}
+                            beforeUpload={(file) => {
+                                const imageUrl = URL.createObjectURL(file);
+                                setProfileImage(imageUrl);
+                                return false;
+                            }}
                         >
-                            Update
-                        </Button>
+                            <Button icon={<CameraOutlined />}>
+                                Update
+                            </Button>
+                        </Upload>
 
                         <Button
                             danger
                             icon={<DeleteOutlined />}
+                            onClick={()=>setProfileImage(null)}
                         >
                             Delete
                         </Button>
@@ -157,11 +172,45 @@ const Settings: React.FC = () => {
 
                         <label>UPI QR Code</label>
 
-                        <Upload beforeUpload={() => false}>
+                        <Upload
+                            showUploadList={false}
+                            beforeUpload={(file) => {
+                                const imageUrl = URL.createObjectURL(file);
+                                setQrImage(imageUrl);
+                                return false;
+                            }}
+                        >
                             <Button icon={<UploadOutlined />}>
                                 Upload QR Code
                             </Button>
                         </Upload>
+
+                        {qrImage && (
+                            <div style={{ marginTop: 12 }}>
+                                <img
+                                    src={qrImage}
+                                    alt="Selected"
+                                    style={{
+                                        width: 120,
+                                        height: 120,
+                                        objectFit: "cover",
+                                        borderRadius: 8,
+                                        border: "1px solid #ddd",
+                                        display: "block",
+                                        marginBottom: 8,
+                                    }}
+                                />
+
+                                <Button
+                                    danger
+                                    size="small"
+                                    icon={<DeleteOutlined />}
+                                    onClick={() => setQrImage(null)}
+                                >
+                                    Remove Image
+                                </Button>
+                            </div>
+                        )}
 
                     </div>
 
@@ -182,7 +231,25 @@ const Settings: React.FC = () => {
                 </div>
 
             </div>
-
+            <Modal
+                open={showImg}
+                onCancel={() => setShowImg(false)}
+                footer={null}
+                centered
+                maskClosable={false}
+            >
+                {profileImage ? (
+                    <Image
+                        width="100%"
+                        alt="Profile"
+                        src={profileImage}
+                    />
+                ) : (
+                    <div style={{ textAlign: "center" }}>
+                        No profile image selected
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 };
