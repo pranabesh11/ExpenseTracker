@@ -51,7 +51,11 @@ public class WebSecurityConfig {
                                 "/auth/reset-password",
                                 "/auth/refreshToken"
                         ).permitAll()
-                        .requestMatchers("/auth/me")
+                        .requestMatchers(
+                                "/auth/me",
+                                "/app/settings",
+                                "/app/settingsData"
+                        )
                         .authenticated()
                         .anyRequest()
                         .authenticated())

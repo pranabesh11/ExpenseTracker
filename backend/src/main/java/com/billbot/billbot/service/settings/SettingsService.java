@@ -1,5 +1,6 @@
 package com.billbot.billbot.service.settings;
 import com.billbot.billbot.DTO.settings.SettingsRequest;
+import com.billbot.billbot.DTO.settings.SettingsResponse;
 import com.billbot.billbot.entity.auth.User;
 import com.billbot.billbot.entity.settings.Settings;
 import com.billbot.billbot.repository.auth.UserRepository;
@@ -7,6 +8,8 @@ import com.billbot.billbot.repository.settings.SettingsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,45 @@ public class SettingsService{
         settings.setUpiQrCode(settingsRequest.getUpiQrCode());
         settingsRepository.save(settings);
         return mapToRequest(settings);
+    }
+    public SettingsResponse getSettingsData(Long userId){
+        boolean doesExist = settingsRepository.existsById(userId);
+        if(doesExist) {
+            Settings settings = settingsRepository.findById(userId).orElseThrow(() -> new RuntimeException("Settings not found for this user"));
+            SettingsResponse settingsResponse = new SettingsResponse();
+            settingsResponse.setProfilePicture(settings.getProfilePicture());
+            settingsResponse.setFirstName(settings.getFirstName());
+            settingsResponse.setLastName(settings.getLastName());
+            settingsResponse.setNickName(settings.getNickName());
+            settingsResponse.setEmail(userRepository.findById(userId).get().getEmail());
+            settingsResponse.setPhone(settings.getPhoneNo());
+            settingsResponse.setUpiId(settings.getUpiId());
+            settingsResponse.setAddress(settings.getAddress());
+            settingsResponse.setCurrency(settings.getCurrency());
+            settingsResponse.setLanguage(settings.getLanguage());
+            settingsResponse.setAbout(settings.getAbout());
+            settingsResponse.setUpiQrCode(settings.getUpiQrCode());
+            settingsResponse.setAllCurrency(Settings.Currency.values());
+            settingsResponse.setAllLanguage(Settings.Language.values());
+            return settingsResponse;
+        }else{
+            SettingsResponse settingsResponse = new SettingsResponse();
+            settingsResponse.setProfilePicture(null);
+            settingsResponse.setFirstName(null);
+            settingsResponse.setLastName(null);
+            settingsResponse.setNickName(null);
+            settingsResponse.setEmail(userRepository.findById(userId).get().getEmail());
+            settingsResponse.setPhone(null);
+            settingsResponse.setUpiId(null);
+            settingsResponse.setAddress(null);
+            settingsResponse.setCurrency(null);
+            settingsResponse.setLanguage(null);
+            settingsResponse.setAbout(null);
+            settingsResponse.setUpiQrCode(null);
+            settingsResponse.setAllCurrency(Settings.Currency.values());
+            settingsResponse.setAllLanguage(Settings.Language.values());
+            return settingsResponse;
+        }
     }
     private SettingsRequest mapToRequest(Settings settings) {
         SettingsRequest request = new SettingsRequest();

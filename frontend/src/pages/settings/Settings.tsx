@@ -58,6 +58,9 @@ const Settings: React.FC = () => {
             [key]: value,
         }));
     };
+    const submitSettings = ()=>{
+        console.log(profileImage, form, qrImage)
+    }
 
     return (
         <div className="settingsPage">
@@ -224,7 +227,7 @@ const Settings: React.FC = () => {
                         Cancel
                     </Button>
 
-                    <Button type="primary">
+                    <Button type="primary" onClick={submitSettings}>
                         Save Changes
                     </Button>
 

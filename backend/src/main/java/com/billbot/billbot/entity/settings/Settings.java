@@ -16,40 +16,15 @@ import lombok.Setter;
     name = "settings"
 )
 public class Settings {
-    public enum Currency{
-        INR,
-        EUR,
-        USD
-    }
-    public enum Language{
-        ENGLISH,
-        BENGALI,
-        GERMAN
-    }
     @Id
-    private Long userId;
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "userId")
     private User user;
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "BYTEA")
-    private byte[] profilePicture;
-
-    private String firstName;
-    private String lastName;
-    private String nickName;
-    private String phoneNo;
-    private String upiId;
-    private String address;
-    @Enumerated(EnumType.STRING)
-    private Currency currency;
-    @Enumerated(EnumType.STRING)
-    private Language language;
-    private String about;
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "BYTEA")
-    private byte[] upiQrCode;
+    @ManyToOne
+    @JoinColumn(name = "fieldId")
+    private SettingsFormMetaData field;
+    @Column(columnDefinition = "TEXT")
+    private String value;
 }

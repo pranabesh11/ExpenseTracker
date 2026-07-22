@@ -2,6 +2,7 @@ package com.billbot.billbot.controller;
 
 import com.billbot.billbot.DTO.ApiResponse;
 import com.billbot.billbot.DTO.settings.SettingsRequest;
+import com.billbot.billbot.DTO.settings.SettingsResponse;
 import com.billbot.billbot.service.settings.SettingsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,10 @@ public class Settings {
     public ResponseEntity<ApiResponse> saveSettings(@Valid @RequestBody SettingsRequest settingsRequest){
         SettingsRequest response = settingsService.saveSettingsData(settingsRequest);
         return ResponseEntity.ok(new ApiResponse<>(true, "Settings Data Saved", response));
+    }
+    @PostMapping("/settingsData")
+    public ResponseEntity<ApiResponse> getSettingsData(@Valid @RequestBody Long userId){
+        SettingsResponse response = settingsService.getSettingsData(userId);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Data fetched successfully", response));
     }
 }
