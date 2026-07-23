@@ -23,10 +23,6 @@ public class SettingsResponse {
     private String phone;
     private String upiId;
     private String address;
-    private Settings.Currency currency;
-    private Settings.Language language;
     private String about;
     private byte[] upiQrCode;
-    private Settings.Currency[] allCurrency;
-    private Settings.Language[] allLanguage;
 }

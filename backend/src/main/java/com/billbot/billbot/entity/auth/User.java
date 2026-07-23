@@ -4,6 +4,9 @@ import com.billbot.billbot.entity.settings.Settings;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -18,7 +21,7 @@ public class User {
     private String password;
     @Column(nullable = false)
     private boolean verified;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Settings settings;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Settings> settings;
 
 }
