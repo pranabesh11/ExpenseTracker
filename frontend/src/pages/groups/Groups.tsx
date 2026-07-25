@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./groups.css";
 import { Avatar, Button, Dropdown, Input, type MenuProps } from "antd";
 import { MoreOutlined, PlusOutlined, SearchOutlined, SendOutlined } from "@ant-design/icons";
+import CreateGroup from "../popups/CreateGroup";
 
 const groups = [
   { id: 1, name: "React Developers", lastMessage: "Hey everyone!" },
@@ -22,12 +23,39 @@ const menuItems: MenuProps["items"] = [
     label: "Delete Chat",
   },
 ];
+const dummyMembers = [
+  {
+    id: 1,
+    name: "John Doe",
+  },
+  {
+    id: 2,
+    name: "Emma Watson",
+  },
+  {
+    id: 3,
+    name: "Alex Johnson",
+  },
+  {
+    id: 4,
+    name: "Sophia Brown",
+  },
+  {
+    id: 5,
+    name: "David Miller",
+  },
+  {
+    id: 6,
+    name: "Olivia Wilson",
+  },
+];
 
 const Groups: React.FC = () => {
     const [selectedGroup, setSelectedGroup] = useState(groups[0]);
     const [mobileView, setMobileView] = useState(window.innerWidth < 992);
     const [showChat, setShowChat] = useState(false);
     const [input, setInput] = useState("");
+    const [openGroupPopup, setOpenGroupPopup] = useState(false);
     const [messages, setMessages] = useState([
     {
         id: 1,
@@ -88,6 +116,7 @@ const Groups: React.FC = () => {
                 <Button
                     type="primary"
                     icon={<PlusOutlined />}
+                    onClick={() => setOpenGroupPopup(true)}
                 >
                     Create Group
                 </Button>
@@ -176,6 +205,11 @@ const Groups: React.FC = () => {
           </div>
         </div>
       )}
+      <CreateGroup
+        isOpen={openGroupPopup}
+        onClose={() => setOpenGroupPopup(false)}
+        members={dummyMembers}
+      />
     </div>
   );
 };
