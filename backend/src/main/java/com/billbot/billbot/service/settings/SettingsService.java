@@ -3,19 +3,22 @@ import com.billbot.billbot.DTO.settings.SettingsRequest;
 import com.billbot.billbot.DTO.settings.SettingsResponse;
 import com.billbot.billbot.entity.auth.User;
 import com.billbot.billbot.entity.settings.Settings;
+import com.billbot.billbot.entity.settings.SettingsFormMetaData;
 import com.billbot.billbot.repository.auth.UserRepository;
+import com.billbot.billbot.repository.settings.SettingsFormMetadataRepository;
 import com.billbot.billbot.repository.settings.SettingsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SettingsService{
     private final SettingsRepository settingsRepository;
     private final UserRepository userRepository;
+    private final SettingsFormMetadataRepository settingsFormMetadataRepository;
     @Transactional
     public SettingsRequest saveSettingsData(SettingsRequest settingsRequest){
         Settings settings;
@@ -36,6 +39,7 @@ public class SettingsService{
             SettingsResponse settingsResponse = new SettingsResponse();
             return settingsResponse;
         }else{
+            List<SettingsFormMetaData> settingsData  = settingsFormMetadataRepository.findAll();
             SettingsResponse settingsResponse = new SettingsResponse();
             settingsResponse.setProfilePicture(null);
             settingsResponse.setFirstName(null);

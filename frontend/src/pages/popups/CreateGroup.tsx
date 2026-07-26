@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState } from "react";
 import "./CreateGroup.css";
+import { DeleteOutlined } from "@mui/icons-material";
 
 export interface Member {
   id: number;
@@ -85,8 +86,11 @@ if (!isOpen) return null;
 
                 <img src={groupImage} alt="Group" />
 
-                <button onClick={removeImage}>
-                  Delete
+                <button
+                    className="cg-delete-image"
+                    onClick={removeImage}
+                >
+                    <DeleteOutlined />
                 </button>
 
               </div>
@@ -123,7 +127,7 @@ if (!isOpen) return null;
 
           </div>
 
-          <div className="cg-field">
+          <div className="cg-field cg-search-field">
 
             <label>Add Members</label>
 
