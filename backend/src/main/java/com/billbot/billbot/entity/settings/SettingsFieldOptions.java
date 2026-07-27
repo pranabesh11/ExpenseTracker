@@ -1,9 +1,13 @@
 package com.billbot.billbot.entity.settings;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "settings_field_options")
+@Getter
+@Setter
 public class SettingsFieldOptions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

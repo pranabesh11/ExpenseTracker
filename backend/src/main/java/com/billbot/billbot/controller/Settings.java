@@ -1,6 +1,7 @@
 package com.billbot.billbot.controller;
 
 import com.billbot.billbot.DTO.ApiResponse;
+import com.billbot.billbot.DTO.settings.SettingsFormStructure;
 import com.billbot.billbot.DTO.settings.SettingsRequest;
 import com.billbot.billbot.DTO.settings.SettingsResponse;
 import com.billbot.billbot.service.settings.SettingsService;
@@ -24,7 +25,7 @@ public class Settings {
     }
     @PostMapping("/settingsData")
     public ResponseEntity<ApiResponse> getSettingsData(@Valid @RequestBody Long userId){
-        SettingsResponse response = settingsService.getSettingsData(userId);
+        SettingsFormStructure response = settingsService.getSettingsData(userId);
         return ResponseEntity.ok(new ApiResponse<>(true, "Data fetched successfully", response));
     }
 }
