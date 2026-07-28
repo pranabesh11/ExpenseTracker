@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SettingsFormMetadataRepository extends JpaRepository<SettingsFormMetaData, Long> {
+    SettingsFormMetaData findByKey(String key);
 }

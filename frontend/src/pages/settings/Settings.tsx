@@ -40,7 +40,9 @@ const dummyFields = [
 
 const Settings: React.FC = () => {
     const [profileImage, setProfileImage] = useState<string | null>(null);
+    const [profileFile, setProfileFile] = useState<File | null>(null);
     const [qrImage, setQrImage] = useState<string | null>(null);
+    const [qrFile, setQrFile] = useState<File | null>(null);
     const [showImg, setShowImg] = useState<boolean>(false);
     const [form, setForm] = useState(
         dummyFields.reduce(
@@ -58,9 +60,24 @@ const Settings: React.FC = () => {
             [key]: value,
         }));
     };
-    const submitSettings = ()=>{
-        console.log(profileImage, form, qrImage)
-    }
+    const submitSettings = () => {
+        const formData = new FormData();
+        // Add all text fields
+        Object.entries(form).forEach(([key, value]) => {
+            formData.append(key, value as string);
+        });
+        // Add images
+        if (profileFile) {
+            formData.append("profilePicture", profileFile);
+        }
+        if (qrFile) {
+            formData.append("qrCode", qrFile);
+        }
+        // Log FormData
+        for (const [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+    };
 
     return (
         <div className="settingsPage">
@@ -89,8 +106,8 @@ const Settings: React.FC = () => {
                         <Upload
                             showUploadList={false}
                             beforeUpload={(file) => {
-                                const imageUrl = URL.createObjectURL(file);
-                                setProfileImage(imageUrl);
+                                setProfileFile(file);
+                                setProfileImage(URL.createObjectURL(file));
                                 return false;
                             }}
                         >
@@ -178,8 +195,8 @@ const Settings: React.FC = () => {
                         <Upload
                             showUploadList={false}
                             beforeUpload={(file) => {
-                                const imageUrl = URL.createObjectURL(file);
-                                setQrImage(imageUrl);
+                                setQrFile(file);
+                                setQrImage(URL.createObjectURL(file));
                                 return false;
                             }}
                         >

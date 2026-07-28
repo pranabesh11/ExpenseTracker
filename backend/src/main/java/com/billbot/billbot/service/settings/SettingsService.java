@@ -11,9 +11,16 @@ import com.billbot.billbot.repository.settings.SettingsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,17 +29,56 @@ public class SettingsService{
     private final UserRepository userRepository;
     private final SettingsFormMetadataRepository settingsFormMetadataRepository;
     @Transactional
-    public SettingsRequest saveSettingsData(SettingsRequest settingsRequest){
-        Settings settings;
-        settings = settingsRepository.findById(settingsRequest.getId()).orElse(null);
-        if(settings != null){
-            settings = settingsRepository.findById(settingsRequest.getId()).orElseThrow(null);
-        }else{
-            User user = userRepository.findById(settingsRequest.getId()).orElseThrow(null);
-            settings = new Settings();
-            settings.setUser(user);
-        }
-        return new SettingsRequest();
+    public boolean saveSettingsData(Map<String, String> fields, Map<String, MultipartFile> files) throws IOException {
+        String id = fields.get("id");
+        User user = userRepository.findById(Long.parseLong(id)).orElseThrow(() -> new RuntimeException("User not found"));
+        fields.forEach((key, value)->{
+            Settings settings = new Settings();
+            if(!"id".equalsIgnoreCase(key)) {
+                Settings existing = settingsRepository.findByUserIdAndFieldId(Long.parseLong(id), settingsFormMetadataRepository.findByKey(key).getId());
+                if(existing == null) {
+                    settings.setUser(user);
+                    settings.setField(settingsFormMetadataRepository.findByKey(key));
+                    settings.setValue(value);
+                    settingsRepository.save(settings);
+                }else{
+                    existing.setValue(value);
+                    settingsRepository.save(existing);
+                }
+            }
+        });
+        String uploadPath = "F:\\java\\ETrack\\ETrack\\ExpenseTracker\\backend\\uploads";
+        files.forEach((key, file)->{
+            try {
+                String originalFileName = file.getOriginalFilename();
+                String extension = "";
+                if (originalFileName != null && originalFileName.contains(".")) {
+                    extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                }
+                String newFileName = UUID.randomUUID() + extension;
+                Path uploadDir = Paths.get(uploadPath);
+                if (!Files.exists(uploadDir)) {
+                    Files.createDirectories(uploadDir);
+                }
+                Path filePath = uploadDir.resolve(newFileName);
+                Files.copy(file.getInputStream(), filePath);
+                SettingsFormMetaData field = settingsFormMetadataRepository.findByKey(key);
+                Settings existing = settingsRepository.findByUserIdAndFieldId(Long.parseLong(id), field.getId());
+                if (existing == null) {
+                    Settings settings = new Settings();
+                    settings.setUser(user);
+                    settings.setField(field);
+                    settings.setValue(newFileName);
+                    settingsRepository.save(settings);
+                } else {
+                    existing.setValue(newFileName);
+                    settingsRepository.save(existing);
+                }
+            }catch (IOException exception){
+                throw new RuntimeException(exception);
+            }
+        });
+        return true;
     }
     public SettingsFormStructure getSettingsData(Long userId){
         List<SettingsFormMetaData> settingsData  = settingsFormMetadataRepository.findAll();
@@ -51,7 +97,7 @@ public class SettingsService{
                     return opt;
                 }).toList();
                 selectRow.setOptions(options);
-                selectRow.setValue(settingsRepository.findByUserIdAndFieldId(userId, data.getId()));
+                selectRow.setValue(settingsRepository.findByUserIdAndFieldId(userId, data.getId()).getValue());
                 return selectRow;
             }else{
                 SettingsFormStructure.EachRow row = new SettingsFormStructure.EachRow();
@@ -60,7 +106,11 @@ public class SettingsService{
                 row.setType(data.getType());
                 row.setRequired(data.isRequired());
                 row.setOrder(data.getDisplayOrder());
-                row.setValue(settingsRepository.findByUserIdAndFieldId(userId, data.getId()));
+                if("email".equalsIgnoreCase(data.getType())){
+                    row.setValue(userRepository.findById(userId).get().getEmail());
+                }else{
+                    row.setValue(settingsRepository.findByUserIdAndFieldId(userId, data.getId()).getValue());
+                }
                 return row;
             }
         }).toList();

@@ -53,7 +53,7 @@ public class WebSecurityConfig {
                         ).permitAll()
                         .requestMatchers(
                                 "/auth/me",
-                                "/app/settings",
+                                "/app/settingsSave",
                                 "/app/settingsData"
                         )
                         .authenticated()

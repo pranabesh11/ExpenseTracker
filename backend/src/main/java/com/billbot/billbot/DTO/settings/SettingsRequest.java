@@ -1,19 +1,15 @@
 package com.billbot.billbot.DTO.settings;
-
-import jakarta.persistence.Lob;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class SettingsRequest {
     private Long id;
-    @Lob
-    private byte[] profilePicture;
+    private MultipartFile profilePicture;
     private String firstName;
     private String lastName;
     private String nickName;
@@ -23,5 +19,5 @@ public class SettingsRequest {
     private String currency;
     private String language;
     private String about;
-    private byte[] upiQrCode;
+    private MultipartFile  upiQrCode;
 }
