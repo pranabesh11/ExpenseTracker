@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface SettingsRepository extends JpaRepository<Settings,Long> {
     Settings findByUserIdAndFieldId(Long userId, Long fieldId);
+    Optional<Settings> findByUser_IdAndField_Id(Long userId, Long fieldId);
+
 }

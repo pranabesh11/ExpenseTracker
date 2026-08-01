@@ -35,7 +35,7 @@ public class SettingsService{
         fields.forEach((key, value)->{
             Settings settings = new Settings();
             if(!"id".equalsIgnoreCase(key)) {
-                Settings existing = settingsRepository.findByUserIdAndFieldId(Long.parseLong(id), settingsFormMetadataRepository.findByKey(key).getId());
+                Settings existing = settingsRepository.findByUser_IdAndField_Id(Long.parseLong(id), settingsFormMetadataRepository.findByKey(key).getId()).orElse(null);
                 if(existing == null) {
                     settings.setUser(user);
                     settings.setField(settingsFormMetadataRepository.findByKey(key));
@@ -63,7 +63,7 @@ public class SettingsService{
                 Path filePath = uploadDir.resolve(newFileName);
                 Files.copy(file.getInputStream(), filePath);
                 SettingsFormMetaData field = settingsFormMetadataRepository.findByKey(key);
-                Settings existing = settingsRepository.findByUserIdAndFieldId(Long.parseLong(id), field.getId());
+                Settings existing = settingsRepository.findByUser_IdAndField_Id(Long.parseLong(id), field.getId()).orElse(null);
                 if (existing == null) {
                     Settings settings = new Settings();
                     settings.setUser(user);
