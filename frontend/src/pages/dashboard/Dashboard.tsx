@@ -5,10 +5,14 @@ const { RangePicker } = DatePicker;
 import ReactECharts from "echarts-for-react";
 import { DeleteFilled, EditOutlined, EyeFilled, EyeOutlined } from "@ant-design/icons";
 import IncomeExpenseModal from "../popups/IncomeExpenseModal ";
+import type { ExpenseData } from "../popups/ViewExpenseModal";
+import ViewExpenseModal from "../popups/ViewExpenseModal";
 
 const Dashboard: React.FC = () => {
   console.log("Dashboard mounted");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState<ExpenseData | null>(null);
 
   const handleOpen = () => {
     setIsModalOpen(true);
@@ -16,6 +20,20 @@ const Dashboard: React.FC = () => {
 
   const handleClose = () => {
     setIsModalOpen(false);
+  };
+  const handleView = () => {
+  setSelectedExpense({
+      id: 1,
+      type: "Expense",
+      category: "Food",
+      amount: 12000,
+      date: "18 June 2025",
+      paymentMode: "UPI",
+      description:
+        "Lunch and dinner expenses with friends. Includes snacks, beverages and dessert.",
+      status: "Completed",
+    });
+    setViewOpen(true);
   };
   const data = [
     { type: "Food", value: 27 },
@@ -100,13 +118,18 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div className="itemActions">
-              <Button size="small"><EyeOutlined/></Button>
+              <Button size="small" onClick={handleView}> <EyeOutlined /></Button>
               <Button size="small"><EditOutlined/></Button>
               <Button size="small" danger><DeleteFilled/></Button>
             </div>
           </div>
         </div>
       </div>
+      <ViewExpenseModal
+        open={viewOpen}
+        onClose={() => setViewOpen(false)}
+        data={selectedExpense}
+      />
     </div>
   );
 };

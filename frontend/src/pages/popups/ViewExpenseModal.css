@@ -1,0 +1,31 @@
+.expense-details-card {
+    border-radius: 12px;
+    background: #fafafa;
+    padding: 12px;
+}
+
+.label {
+    color: #888;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.description {
+    margin-top: 10px;
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ececec;
+    line-height: 1.7;
+    color: #555;
+}
+
+.ant-modal-title {
+    font-size: 20px !important;
+    font-weight: 600;
+}
+
+.ant-card {
+    box-shadow: none;
+}
