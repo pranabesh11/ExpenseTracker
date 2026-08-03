@@ -1,8 +1,8 @@
 import React from "react";
-import { Modal, Card, Typography, Row, Col, Tag, Divider } from "antd";
+import { Modal, Card, Typography, Row, Col, Tag } from "antd";
 import "./ViewExpenseModal.css";
 
-const { Title, Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 export interface ExpenseData {
   id?: number;
@@ -31,59 +31,68 @@ const ViewExpenseModal: React.FC<Props> = ({
       open={open}
       onCancel={onClose}
       footer={null}
-      width={650}
+      width={540}
       centered
       title="Transaction Details"
     >
       {data && (
         <Card className="expense-details-card" bordered={false}>
-          <Row gutter={[20, 20]}>
+          <Row gutter={[12, 12]}>
             <Col span={12}>
-              <Text className="label">Category</Text>
-              <Title level={5}>{data.category}</Title>
+              <div className="info-item">
+                <Text className="label">Category</Text>
+                <Text strong>{data.category}</Text>
+              </div>
             </Col>
 
             <Col span={12}>
-              <Text className="label">Type</Text>
-              <br />
-              <Tag color={data.type === "Income" ? "green" : "red"}>
-                {data.type}
-              </Tag>
+              <div className="info-item">
+                <Text className="label">Type</Text>
+                <Tag color={data.type === "Income" ? "green" : "red"}>
+                  {data.type}
+                </Tag>
+              </div>
             </Col>
 
             <Col span={12}>
-              <Text className="label">Amount</Text>
-              <Title level={4} style={{ color: "#1677ff" }}>
-                ₹{data.amount.toLocaleString()}
-              </Title>
+              <div className="info-item">
+                <Text className="label">Amount</Text>
+                <Text className="amount">
+                  ₹{data.amount.toLocaleString()}
+                </Text>
+              </div>
             </Col>
 
             <Col span={12}>
-              <Text className="label">Date</Text>
-              <Title level={5}>{data.date}</Title>
+              <div className="info-item">
+                <Text className="label">Date</Text>
+                <Text>{data.date}</Text>
+              </div>
             </Col>
 
             <Col span={12}>
-              <Text className="label">Payment Mode</Text>
-              <Title level={5}>{data.paymentMode}</Title>
+              <div className="info-item">
+                <Text className="label">Payment Mode</Text>
+                <Text>{data.paymentMode}</Text>
+              </div>
             </Col>
 
             <Col span={12}>
-              <Text className="label">Status</Text>
-              <br />
-              <Tag color="blue">{data.status || "Completed"}</Tag>
+              <div className="info-item">
+                <Text className="label">Status</Text>
+                <Tag color="blue">{data.status || "Completed"}</Tag>
+              </div>
+            </Col>
+
+            <Col span={24}>
+              <div className="info-item">
+                <Text className="label">Description</Text>
+                <div className="description">
+                  {data.description || "-"}
+                </div>
+              </div>
             </Col>
           </Row>
-
-          <Divider />
-
-          <div>
-            <Text className="label">Description</Text>
-
-            <Paragraph className="description">
-              {data.description}
-            </Paragraph>
-          </div>
         </Card>
       )}
     </Modal>

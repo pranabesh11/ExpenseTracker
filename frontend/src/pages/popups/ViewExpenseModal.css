@@ -1,31 +1,63 @@
 .expense-details-card {
-    border-radius: 12px;
-    background: #fafafa;
-    padding: 12px;
+  border-radius: 10px;
+  background: #fff;
+  padding: 6px;
+  box-shadow: none;
 }
 
-.label {
-    color: #888;
-    font-size: 13px;
-    display: block;
-    margin-bottom: 6px;
-}
-
-.description {
-    margin-top: 10px;
-    background: white;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ececec;
-    line-height: 1.7;
-    color: #555;
+.ant-modal .ant-modal-content {
+  border-radius: 12px;
+  padding: 18px 20px;
 }
 
 .ant-modal-title {
-    font-size: 20px !important;
-    font-weight: 600;
+  font-size: 17px !important;
+  font-weight: 600;
 }
 
-.ant-card {
-    box-shadow: none;
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 11px;
+  color: #8c8c8c;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.info-item .ant-typography {
+  margin: 0;
+  font-size: 14px;
+}
+
+.amount {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1677ff;
+}
+
+.ant-tag {
+  width: fit-content;
+  margin: 0;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.description {
+  margin-top: 2px;
+  padding: 10px 12px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #595959;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.ant-card-body {
+  padding: 0 !important;
 }
