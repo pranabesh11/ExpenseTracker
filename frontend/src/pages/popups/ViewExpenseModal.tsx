@@ -37,7 +37,7 @@ const ViewExpenseModal: React.FC<Props> = ({
     >
       {data && (
         <Card className="expense-details-card" bordered={false}>
-          <Row gutter={[12, 12]}>
+          <Row gutter={[12, 16]}>
             <Col span={12}>
               <div className="info-item">
                 <Text className="label">Category</Text>
@@ -84,8 +84,9 @@ const ViewExpenseModal: React.FC<Props> = ({
               </div>
             </Col>
 
+            {/* Larger Description Section */}
             <Col span={24}>
-              <div className="info-item">
+              <div className="info-item description-section">
                 <Text className="label">Description</Text>
                 <div className="description">
                   {data.description || "-"}
