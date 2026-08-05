@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import rateLimit from "./middleware/rate-limit.js"
 import auth from "./routes/auth.js"
+import settings from './routes/settings.js';
 dotenv.config({
     path: ".env.dev"
 });
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 auth(app)
+settings(app)
 const PORT = Number(process.env.PORT) || 5001;
 app.listen(PORT || 5001,()=>{
     console.log("======================================");

@@ -52,6 +52,10 @@ public class WebSecurityConfig {
                                 "/auth/refreshToken"
                         ).permitAll()
                         .requestMatchers(
+                                "/app/files/**"
+                        )
+                        .permitAll()
+                        .requestMatchers(
                                 "/auth/me",
                                 "/app/settingsSave",
                                 "/app/settingsData"

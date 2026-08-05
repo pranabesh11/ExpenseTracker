@@ -109,7 +109,11 @@ public class SettingsService{
                 if("email".equalsIgnoreCase(data.getType())){
                     row.setValue(userRepository.findById(userId).get().getEmail());
                 }else{
-                    row.setValue(settingsRepository.findByUserIdAndFieldId(userId, data.getId()).getValue());
+                    String value = settingsRepository.findByUserIdAndFieldId(userId, data.getId()).getValue();
+                    if ("IMAGE".equalsIgnoreCase(data.getType())) {
+                        value = "/app/files/" + value;
+                    }
+                    row.setValue(value);
                 }
                 return row;
             }

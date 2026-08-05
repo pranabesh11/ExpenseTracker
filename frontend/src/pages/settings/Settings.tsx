@@ -1,58 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./settings.css";
-import {
-    Avatar,
-    Button,
-    Input,
-    Upload,
-    Select,
-    Divider,
-    Modal,
-    Image 
-} from "antd";
-import {
-    CameraOutlined,
-    DeleteOutlined,
-    EyeOutlined,
-    UploadOutlined,
-    UserOutlined,
-} from "@ant-design/icons";
+import { Avatar, Button, Input, Upload, Select, Divider, Modal, Image } from "antd";
+import { CameraOutlined, DeleteOutlined, EyeOutlined, UserOutlined } from "@ant-design/icons";
+import { getApiData } from "../../shared/api/get-api-data";
 
 const { TextArea } = Input;
 
-const dummyFields = [
-    { key: "firstName", label: "First Name", value: "Pranab", type: "text" },
-    { key: "lastName", label: "Last Name", value: "Pratihar", type: "text" },
-    { key: "nickname", label: "Nickname", value: "Piku", type: "text" },
-    { key: "email", label: "Email", value: "pranab@email.com", type: "email" },
-    { key: "phone", label: "Phone", value: "+91 9876543210", type: "text" },
-    { key: "upiId", label: "UPI ID", value: "pranab@ybl", type: "text" },
-    { key: "address", label: "Address", value: "Kolkata, West Bengal", type: "text" },
-    { key: "currency", label: "Currency", value: "INR", type: "select" },
-    { key: "language", label: "Language", value: "English", type: "select" },
-    {
-        key: "about",
-        label: "About",
-        value: "Love tracking expenses with friends.",
-        type: "textarea",
-    },
-];
-
 const Settings: React.FC = () => {
+    const [fields, setFields] = useState<any[]>([]);
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const [profileFile, setProfileFile] = useState<File | null>(null);
     const [qrImage, setQrImage] = useState<string | null>(null);
     const [qrFile, setQrFile] = useState<File | null>(null);
     const [showImg, setShowImg] = useState<boolean>(false);
-    const [form, setForm] = useState(
-        dummyFields.reduce(
-            (acc, item) => ({
-                ...acc,
-                [item.key]: item.value,
-            }),
-            {}
-        )
-    );
+    const [form, setForm] = useState<Record<string, any>>({});
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const response = await getApiData({
+                    endpoint: "/billbot/settingsData",
+                    payload: { id: 7 },
+                });
+                const rows = response.data.rows;
+                setFields(rows);
+                const initialForm = rows.reduce((acc: any, item: any) => {
+                    acc[item.key] = item.value;
+                    return acc;
+                }, {});
+                setForm(initialForm);
+                const profile = rows.find(
+                    (item: any) => item.key === "profileImage"
+                );
+                const qr = rows.find(
+                    (item: any) => item.key === "upiQrCode"
+                );
+                if (profile) {
+                    setProfileImage(
+                        "http://localhost:8080" + profile.value
+                    );
+                }
+                if (qr) {
+                    setQrImage(
+                        "http://localhost:8080" + qr.value
+                    );
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        };
+        fetchSettings();
+    }, []);
 
     const onChange = (key: string, value: any) => {
         setForm((prev) => ({
@@ -60,22 +57,31 @@ const Settings: React.FC = () => {
             [key]: value,
         }));
     };
-    const submitSettings = () => {
+    const submitSettings = async () => {
         const formData = new FormData();
-        // Add all text fields
         Object.entries(form).forEach(([key, value]) => {
-            formData.append(key, value as string);
+            const field = fields.find((item) => item.key === key);
+            if (field?.type !== "IMAGE") {
+                formData.append(key, value as string);
+            }
         });
-        // Add images
+        formData.append("id", "7");
         if (profileFile) {
-            formData.append("profilePicture", profileFile);
+            formData.append("profileImage", profileFile);
         }
         if (qrFile) {
-            formData.append("qrCode", qrFile);
+            formData.append("upiQrCode", qrFile);
         }
-        // Log FormData
         for (const [key, value] of formData.entries()) {
             console.log(key, value);
+        }
+        try{
+            const response = await getApiData({
+                endpoint: "/billbot/settingsData",
+                payload: {},
+            });
+        }catch(e){
+            console.warn(e)
         }
     };
 
@@ -132,10 +138,10 @@ const Settings: React.FC = () => {
 
                 <div className="settingsGrid">
 
-                    {dummyFields.map((field) => (
+                    {fields.filter((field) => field.key !== "profileImage"&& field.key !== "upiQrCode").map((field) => (
                         <div
                             className={
-                                field.type === "textarea"
+                                field.type === "TEXTAREA"
                                     ? "field fullWidth"
                                     : "field"
                             }
@@ -143,7 +149,19 @@ const Settings: React.FC = () => {
                         >
                             <label>{field.label}</label>
 
-                            {field.type === "textarea" ? (
+                            {field.type === "IMAGE" ? (
+                                    <img
+                                        src={"http://localhost:8080" + field.value}
+                                        alt={field.label}
+                                        style={{
+                                            width: 120,
+                                            height: 120,
+                                            objectFit: "cover",
+                                            borderRadius: 8
+                                        }}
+                                    />
+
+                                ) : field.type === "TEXTAREA" ? (
                                 <TextArea
                                     rows={4}
                                     value={form[field.key as keyof typeof form]}
@@ -151,30 +169,13 @@ const Settings: React.FC = () => {
                                         onChange(field.key, e.target.value)
                                     }
                                 />
-                            ) : field.type === "select" ? (
+                            ) : field.type === "SELECT" ? (
                                 <Select
                                     value={form[field.key as keyof typeof form]}
                                     onChange={(value) =>
                                         onChange(field.key, value)
                                     }
-                                    options={[
-                                        {
-                                            label: field.key === "currency"
-                                                ? "INR"
-                                                : "English",
-                                            value: field.key === "currency"
-                                                ? "INR"
-                                                : "English",
-                                        },
-                                        {
-                                            label: field.key === "currency"
-                                                ? "USD"
-                                                : "বাংলা",
-                                            value: field.key === "currency"
-                                                ? "USD"
-                                                : "বাংলা",
-                                        },
-                                    ]}
+                                    options={field.options}
                                 />
                             ) : (
                                 <Input
@@ -187,55 +188,49 @@ const Settings: React.FC = () => {
                             )}
                         </div>
                     ))}
+                </div>
+                <div className="field fullWidth">
+                <label>UPI QR Code</label>
+                <Upload
+                    showUploadList={false}
+                    beforeUpload={(file) => {
+                        setQrFile(file);
+                        setQrImage(URL.createObjectURL(file));
+                        return false;
+                    }}
+                >
+                    <Button>
+                        Upload QR Code
+                    </Button>
+                </Upload>
+                {qrImage && (
+                    <div style={{ marginTop: 12 }}>
 
-                    <div className="field fullWidth">
-
-                        <label>UPI QR Code</label>
-
-                        <Upload
-                            showUploadList={false}
-                            beforeUpload={(file) => {
-                                setQrFile(file);
-                                setQrImage(URL.createObjectURL(file));
-                                return false;
+                        <img
+                            src={qrImage}
+                            alt="QR Code"
+                            style={{
+                                width:120,
+                                height:120,
+                                objectFit:"cover",
+                                borderRadius:8
                             }}
+                        />
+
+                        <br />
+
+                        <Button
+                            danger
+                            icon={<DeleteOutlined />}
+                            onClick={() => setQrImage(null)}
+                            style={{marginTop:8}}
                         >
-                            <Button icon={<UploadOutlined />}>
-                                Upload QR Code
-                            </Button>
-                        </Upload>
-
-                        {qrImage && (
-                            <div style={{ marginTop: 12 }}>
-                                <img
-                                    src={qrImage}
-                                    alt="Selected"
-                                    style={{
-                                        width: 120,
-                                        height: 120,
-                                        objectFit: "cover",
-                                        borderRadius: 8,
-                                        border: "1px solid #ddd",
-                                        display: "block",
-                                        marginBottom: 8,
-                                    }}
-                                />
-
-                                <Button
-                                    danger
-                                    size="small"
-                                    icon={<DeleteOutlined />}
-                                    onClick={() => setQrImage(null)}
-                                >
-                                    Remove Image
-                                </Button>
-                            </div>
-                        )}
+                            Delete
+                        </Button>
 
                     </div>
-
-                </div>
-
+                )}
+            </div>
                 <Divider />
 
                 <div className="footerButtons">
