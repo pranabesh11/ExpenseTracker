@@ -1,123 +1,320 @@
+.expense-modal .ant-modal-content {
+  border-radius: 12px;
+  overflow: visible;
+  background: #f8fafc;
+}
+
+.expense-modal .ant-modal-header {
+  padding: 12px 18px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.expense-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
 .expense-modal .ant-modal-body {
-  max-height: 65vh;
+  padding: 14px;
+  max-height: 70vh;
   overflow-y: auto;
-  padding: 12px;
 }
 
 
-.expense-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+/* Main form card */
 
-
-.expense-card {
-  border-radius: 8px;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.08);
-
-  border: 1px solid #f0f0f0;
-  transition: all 0.2s ease;
-}
-
-
-.expense-card:hover {
+.editor-card {
+  border-radius: 10px !important;
+  border: 1px solid #e5e7eb !important;
+  background: #ffffff;
   box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.12);
-}
-.expense-card .ant-input,
-.expense-card .ant-input-number,
-.expense-card .ant-picker,
-.expense-card .ant-select-selector {
-  box-shadow:
-    0 1px 4px rgba(0, 0, 0, 0.08);
-
-  border-radius: 6px;
+    0 3px 12px rgba(0,0,0,0.08);
 }
 
-
-.expense-card .ant-input:focus,
-.expense-card .ant-input-number-focused,
-.expense-card .ant-picker-focused,
-.expense-card .ant-select-focused .ant-select-selector {
-  box-shadow:
-    0 0 0 2px rgba(22, 119, 255, 0.15);
+.editor-card .ant-card-head {
+  min-height: 38px;
+  padding: 0 14px;
 }
 
-.expense-card .ant-card-head {
-  min-height: 36px;
-  padding: 0 12px;
-}
-
-.expense-card .ant-card-head-title {
+.editor-card .ant-card-head-title {
   padding: 8px 0;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.expense-card .ant-card-body {
-  padding: 12px;
-}
-.expense-card .ant-card-head {
-  min-height: 32px;
-  padding: 0 12px;
-}
-
-
-.expense-card .ant-card-head-title {
-  padding: 6px 0;
   font-size: 14px;
+  font-weight: 700;
+}
+
+.editor-card .ant-card-body {
+  padding: 12px !important;
 }
 
 
-.expense-card .ant-card-extra {
-  padding: 0;
-}
+/* Labels */
 
-
-.expense-card .ant-card-body {
-  padding: 10px;
-}
-
-
-.expense-card label {
+.expense-modal label {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
+  color: #64748b;
   margin-bottom: 3px;
-  color: #666;
 }
 
 
-.delete-column {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+/* Compact inputs */
+
+.expense-modal
+.ant-input,
+.expense-modal
+.ant-input-number,
+.expense-modal
+.ant-picker,
+.expense-modal
+.ant-select-selector {
+  border-radius: 6px !important;
 }
 
 
-.add-button {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+/* Description */
+
+.expense-modal textarea {
+  resize: none;
 }
 
 
-@media (max-width:768px) {
+/* Divider */
 
-  .expense-modal .ant-modal {
-    width: calc(100vw - 20px) !important;
+.expense-modal .ant-divider {
+  margin: 12px 0;
+}
+
+
+/* Entry cards */
+
+.expense-modal
+.ant-card:not(.editor-card) {
+
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.06);
+
+  transition:
+    all .2s ease;
+
+  overflow: hidden;
+}
+
+
+.expense-modal
+.ant-card:not(.editor-card):hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.12);
+}
+
+
+.expense-modal
+.ant-card:not(.editor-card)
+.ant-card-body {
+
+  padding: 10px !important;
+
+}
+
+
+/* Selected card */
+
+.selected-card {
+
+  border: 2px solid #1677ff !important;
+
+  box-shadow:
+    0 0 0 3px rgba(22,119,255,.12),
+    0 6px 18px rgba(0,0,0,.12) !important;
+
+}
+
+
+/* Card header */
+
+.entry-header {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:6px;
+
+}
+
+
+/* Card text */
+
+.expense-modal
+.ant-card:not(.editor-card) p {
+
+  margin:5px 0 0;
+
+  color:#64748b;
+
+  font-size:12px;
+
+  line-height:1.4;
+
+}
+
+
+/* Tags */
+
+.expense-modal .ant-tag {
+
+  margin-inline-end:0;
+
+  border-radius:12px;
+
+  font-size:11px;
+
+  padding:1px 8px;
+
+}
+
+
+/* Card actions */
+
+.expense-modal
+.ant-card-actions {
+
+  background:#fafafa;
+
+  border-top:1px solid #f1f5f9;
+
+}
+
+
+.expense-modal
+.ant-card-actions > li {
+
+  margin:5px 0;
+
+}
+
+
+.expense-modal
+.ant-card-actions .anticon {
+
+  font-size:14px;
+
+}
+
+
+/* Buttons */
+
+.expense-modal
+.ant-btn {
+
+  border-radius:7px;
+
+}
+
+
+/* Empty */
+
+.expense-modal
+.ant-empty {
+
+  padding:20px;
+
+  background:#fff;
+
+  border-radius:10px;
+
+}
+
+
+/* Scrollbar */
+
+.expense-modal
+.ant-modal-body::-webkit-scrollbar {
+
+  width:6px;
+
+}
+
+
+.expense-modal
+.ant-modal-body::-webkit-scrollbar-thumb {
+
+  background:#cbd5e1;
+
+  border-radius:10px;
+
+}
+/* Limit category/title text */
+.entry-header b {
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* Limit description text */
+.expense-modal
+.ant-card:not(.editor-card) p {
+
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  max-width: 100%;
+
+  font-size: 12px;
+  line-height: 18px;
+
+}
+
+
+/* Mobile */
+
+@media(max-width:768px){
+
+  .expense-modal .ant-card:not(.editor-card)
+  .ant-card-body {
+    padding: 8px !important;
   }
 
 
-  .expense-modal .ant-modal-body {
-    padding: 8px;
+  .entry-header {
+    margin-bottom: 4px;
   }
 
 
-  .expense-card .ant-card-body {
-    padding: 8px;
+  .expense-modal
+  .ant-card:not(.editor-card) {
+
+    border-radius: 8px;
+  }
+
+
+  .expense-modal
+  .ant-card-actions > li {
+
+    margin: 3px 0;
+  }
+
+
+  .expense-modal
+  .ant-card-actions .anticon {
+
+    font-size: 13px;
   }
 
 }
