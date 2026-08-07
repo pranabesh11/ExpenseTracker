@@ -3,6 +3,7 @@ import "./settings.css";
 import { Avatar, Button, Input, Upload, Select, Divider, Modal, Image } from "antd";
 import { CameraOutlined, DeleteOutlined, EyeOutlined, UserOutlined } from "@ant-design/icons";
 import { getApiData } from "../../shared/api/get-api-data";
+import { ShowSuccessNotification } from "../../utilities/ShowNotifications";
 
 const { TextArea } = Input;
 
@@ -77,9 +78,12 @@ const Settings: React.FC = () => {
         }
         try{
             const response = await getApiData({
-                endpoint: "/billbot/settingsData",
-                payload: {},
+                endpoint: "/billbot/settingsSave",
+                payload: formData,
             });
+            if(response?.success){
+                ShowSuccessNotification("Data saved")
+            }
         }catch(e){
             console.warn(e)
         }

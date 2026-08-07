@@ -10,7 +10,15 @@ export const getApiData = async ({ endpoint, method = "POST", payload }) => {
 	try {
 		switch (method.toLocaleUpperCase()) {
 			case "POST":
-				response = await axios.post(endpoint, payload)
+				 if (payload instanceof FormData) {
+					response = await axios.post(endpoint, payload, {
+						headers: {
+							"Content-Type": "multipart/form-data",
+						},
+					});
+				} else {
+					response = await axios.post(endpoint, payload);
+				}
 				break
 			case "GET":
 				response = await axios.get(endpoint, { params: payload })
