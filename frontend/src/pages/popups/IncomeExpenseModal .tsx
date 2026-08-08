@@ -13,12 +13,16 @@ import {
   Tag,
   Empty,
   Divider,
+  Upload,
+  Image,
 } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
   CheckOutlined,
+  EyeOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
@@ -28,12 +32,7 @@ const { TextArea } = Input;
 
 type TransactionType = "Income" | "Expense";
 
-type RecurrenceType =
-  | "None"
-  | "Daily"
-  | "Weekly"
-  | "Monthly"
-  | "Yearly";
+type RecurrenceType = "None" | "Daily" | "Weekly" | "Monthly" | "Yearly";
 
 interface ExpenseRow {
   key: string;
@@ -43,6 +42,10 @@ interface ExpenseRow {
   date: Dayjs | null;
   type: TransactionType;
   recurrence: RecurrenceType;
+
+  receiptUrl: string | null;
+  receiptName: string;
+  receiptFile: File | null;
 }
 
 interface Props {
@@ -58,29 +61,33 @@ const createForm = (): ExpenseRow => ({
   date: dayjs(),
   type: "Expense",
   recurrence: "None",
+  receiptUrl: null,
+  receiptName: "",
+  receiptFile: null,
 });
 
-const IncomeExpenseModal: React.FC<Props> = ({
-  open,
-  onClose,
-}) => {
+const IncomeExpenseModal: React.FC<Props> = ({ open, onClose }) => {
   const [entries, setEntries] = useState<ExpenseRow[]>([]);
   const [form, setForm] = useState<ExpenseRow>(createForm());
   const [editingKey, setEditingKey] = useState<string | null>(null);
 
-  const editing = useMemo(
-    () => editingKey !== null,
-    [editingKey]
-  );
+  const editing = useMemo(() => editingKey !== null, [editingKey]);
 
-  const updateField = (
-    field: keyof ExpenseRow,
-    value: any
-  ) => {
+  const updateField = (field: keyof ExpenseRow, value: any) => {
     setForm((prev) => ({
       ...prev,
       [field]: value,
     }));
+  };
+  const handleReceiptUpload = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      updateField("receiptUrl", reader.result as string);
+      updateField("receiptName", file.name);
+      updateField("receiptFile", file);
+    };
+    reader.readAsDataURL(file);
+    return false;
   };
 
   const resetForm = () => {
@@ -99,8 +106,8 @@ const IncomeExpenseModal: React.FC<Props> = ({
                 ...form,
                 key: editingKey,
               }
-            : item
-        )
+            : item,
+        ),
       );
     } else {
       setEntries((prev) => [
@@ -116,9 +123,7 @@ const IncomeExpenseModal: React.FC<Props> = ({
   };
 
   const editEntry = (key: string) => {
-    const data = entries.find(
-      (item) => item.key === key
-    );
+    const data = entries.find((item) => item.key === key);
 
     if (!data) return;
 
@@ -127,15 +132,40 @@ const IncomeExpenseModal: React.FC<Props> = ({
   };
 
   const deleteEntry = (key: string) => {
-    setEntries((prev) =>
-      prev.filter(
-        (item) => item.key !== key
-      )
-    );
+    setEntries((prev) => prev.filter((item) => item.key !== key));
 
     if (editingKey === key) {
       resetForm();
     }
+  };
+  const buildPayload = () => {
+    const formData = new FormData();
+    const receipts: File[] = [];
+    const data = entries.map((entry) => {
+      let receiptIndex: number | null = null;
+      if (entry.receiptFile) {
+        receiptIndex = receipts.length;
+        receipts.push(entry.receiptFile);
+      }
+      return {
+        userId: 7, // replace with your actual logged-in user ID
+        category: entry.category,
+        amount: entry.amount?.toString(),
+        date: entry.date?.format("YYYY-MM-DD"),
+        type: entry.type,
+        recurring: entry.recurrence,
+        description: entry.description,
+        receiptIndex: receiptIndex,
+      };
+    });
+    formData.append(
+      "data",
+      new Blob([JSON.stringify(data)], { type: "application/json" }),
+    );
+    receipts.forEach((file) => {
+      formData.append("receipts", file);
+    });
+    return formData;
   };
 
   return (
@@ -149,214 +179,180 @@ const IncomeExpenseModal: React.FC<Props> = ({
       className="expense-modal"
       maskClosable={false}
     >
-
       <Card
         className="editor-card"
-        title={
-          editing
-            ? "Edit Entry"
-            : "New Entry"
-        }
+        title={editing ? "Edit Entry" : "New Entry"}
       >
-
-        <Row gutter={[10,10]}>
-
-          <Col
-            xs={12}
-            sm={8}
-            md={8}
-          >
+        <Row gutter={[10, 10]}>
+          <Col xs={12} sm={8} md={8}>
             <label>Category</label>
             <Select
               size="small"
               style={{
-                width:"100%"
+                width: "100%",
               }}
-              placement={
-                window.innerWidth < 768
-                  ? "topLeft"
-                  : "bottomLeft"
-              }
+              placement={window.innerWidth < 768 ? "topLeft" : "bottomLeft"}
               getPopupContainer={() => document.body}
-              value={
-                form.category || undefined
-              }
+              value={form.category || undefined}
               placeholder="Select"
-              onChange={(v)=>
-                updateField(
-                  "category",
-                  v
-                )
-              }
+              onChange={(v) => updateField("category", v)}
               options={[
-                {label:"Food",value:"Food"},
-                {label:"Travel",value:"Travel"},
-                {label:"Shopping",value:"Shopping"},
-                {label:"Salary",value:"Salary"},
-                {label:"Other",value:"Other"},
+                { label: "Food", value: "Food" },
+                { label: "Travel", value: "Travel" },
+                { label: "Shopping", value: "Shopping" },
+                { label: "Salary", value: "Salary" },
+                { label: "Other", value: "Other" },
               ]}
             />
           </Col>
 
-
-          <Col
-            xs={12}
-            sm={6}
-            md={5}
-          >
+          <Col xs={12} sm={6} md={5}>
             <label>Amount</label>
             <InputNumber
               size="small"
               style={{
-                width:"100%"
+                width: "100%",
               }}
-              value={
-                form.amount ?? undefined
-              }
-              onChange={(v)=>
-                updateField(
-                  "amount",
-                  v
-                )
-              }
+              value={form.amount ?? undefined}
+              onChange={(v) => updateField("amount", v)}
             />
           </Col>
 
-
-          <Col
-  xs={12}
-  sm={6}
-  md={6}
->
+          <Col xs={12} sm={6} md={6}>
             <label>Date</label>
             <DatePicker
               size="small"
               style={{
-                width:"100%"
+                width: "100%",
               }}
               value={form.date}
-              onChange={(v)=>
-                updateField(
-                  "date",
-                  v
-                )
-              }
+              onChange={(v) => updateField("date", v)}
             />
           </Col>
 
-
-          <Col
-  xs={12}
-  sm={6}
-  md={5}
->
+          <Col xs={12} sm={6} md={5}>
             <label>Type</label>
             <Select
               size="small"
               style={{
-                width:"100%"
+                width: "100%",
               }}
-              placement={
-                window.innerWidth < 768
-                  ? "topLeft"
-                  : "bottomLeft"
-              }
+              placement={window.innerWidth < 768 ? "topLeft" : "bottomLeft"}
               getPopupContainer={() => document.body}
               value={form.type}
-              onChange={(v)=>
-                updateField(
-                  "type",
-                  v
-                )
-              }
+              onChange={(v) => updateField("type", v)}
               options={[
                 {
-                  label:"Income",
-                  value:"Income"
+                  label: "Income",
+                  value: "Income",
                 },
                 {
-                  label:"Expense",
-                  value:"Expense"
-                }
+                  label: "Expense",
+                  value: "Expense",
+                },
               ]}
             />
           </Col>
 
-
-          <Col
-  xs={12}
-  sm={6}
-  md={8}
->
+          <Col xs={12} sm={6} md={8}>
             <label>Recurring</label>
             <Select
               size="small"
               style={{
-                width:"100%"
+                width: "100%",
               }}
-              placement={
-                window.innerWidth < 768
-                  ? "topLeft"
-                  : "bottomLeft"
-              }
+              placement={window.innerWidth < 768 ? "topLeft" : "bottomLeft"}
               getPopupContainer={() => document.body}
               value={form.recurrence}
-              onChange={(v)=>
-                updateField(
-                  "recurrence",
-                  v
-                )
-              }
+              onChange={(v) => updateField("recurrence", v)}
               options={[
                 {
-                  label:"None",
-                  value:"None"
+                  label: "None",
+                  value: "None",
                 },
                 {
-                  label:"Daily",
-                  value:"Daily"
+                  label: "Daily",
+                  value: "Daily",
                 },
                 {
-                  label:"Weekly",
-                  value:"Weekly"
+                  label: "Weekly",
+                  value: "Weekly",
                 },
                 {
-                  label:"Monthly",
-                  value:"Monthly"
+                  label: "Monthly",
+                  value: "Monthly",
                 },
                 {
-                  label:"Yearly",
-                  value:"Yearly"
-                }
+                  label: "Yearly",
+                  value: "Yearly",
+                },
               ]}
             />
           </Col>
 
-
-          <Col
-  xs={24}
-  sm={16}
-  md={16}
->
+          <Col xs={24} sm={16} md={16}>
             <label>Description</label>
 
             <TextArea
               rows={2}
               placeholder="Description"
-              value={
-                form.description
-              }
-              onChange={(e)=>
-                updateField(
-                  "description",
-                  e.target.value
-                )
-              }
+              value={form.description}
+              onChange={(e) => updateField("description", e.target.value)}
             />
           </Col>
+          <Col xs={24} sm={8} md={8}>
+            <label>Receipt</label>
 
+            {!form.receiptUrl ? (
+              <Upload
+                accept="image/*"
+                maxCount={1}
+                showUploadList={false}
+                beforeUpload={handleReceiptUpload}
+              >
+                <Button size="small" icon={<UploadOutlined />} block>
+                  Upload Receipt
+                </Button>
+              </Upload>
+            ) : (
+              <div className="receipt-upload-box">
+                <div className="receipt-preview">
+                  <Image
+                    src={form.receiptUrl}
+                    alt="Receipt"
+                    width={70}
+                    height={70}
+                    preview={{
+                      mask: (
+                        <span>
+                          <EyeOutlined />
+                        </span>
+                      ),
+                    }}
+                  />
+                </div>
+
+                <div className="receipt-info">
+                  <span className="receipt-name">
+                    {form.receiptName || "Receipt"}
+                  </span>
+
+                  <Button
+                    danger
+                    type="text"
+                    size="small"
+                    icon={<DeleteOutlined />}
+                    onClick={() => {
+                      updateField("receiptUrl", null);
+                      updateField("receiptName", "");
+                      updateField("receiptFile", null);
+                    }}
+                  ></Button>
+                </div>
+              </div>
+            )}
+          </Col>
         </Row>
-
 
         <Divider />
 
@@ -364,131 +360,60 @@ const IncomeExpenseModal: React.FC<Props> = ({
           <Button
             size="small"
             type="primary"
-            icon={
-              editing
-                ? <CheckOutlined/>
-                : <PlusOutlined/>
-            }
+            icon={editing ? <CheckOutlined /> : <PlusOutlined />}
             onClick={saveEntry}
           >
-            {
-              editing
-              ? "Update"
-              : "Add Entry"
-            }
+            {editing ? "Update" : "Add Entry"}
           </Button>
 
-          <Button
-            size="small"
-            onClick={resetForm}
-          >
+          <Button size="small" onClick={resetForm}>
             Clear
           </Button>
-
         </Space>
-
       </Card>
-
 
       <Divider />
 
-
-      {
-        entries.length === 0 ?
-
+      {entries.length === 0 ? (
         <Empty />
-
-        :
-
-        <Row gutter={[10,10]}>
-          {
-            entries.map(item=>(
-
-              <Col
-                xs={24}
-                sm={12}
-                md={8}
-                lg={6}
-                xl={6}
-                key={item.key}
+      ) : (
+        <Row gutter={[10, 10]}>
+          {entries.map((item) => (
+            <Col xs={24} sm={12} md={8} lg={6} xl={6} key={item.key}>
+              <Card
+                size="small"
+                className={editingKey === item.key ? "selected-card" : ""}
+                actions={[
+                  <EditOutlined
+                    key="edit"
+                    onClick={() => editEntry(item.key)}
+                  />,
+                  <DeleteOutlined
+                    key="delete"
+                    onClick={() => deleteEntry(item.key)}
+                  />,
+                ]}
               >
+                <div className="entry-header">
+                  <b>{item.category}</b>
 
-                <Card
-                  size="small"
-                  className={
-                    editingKey===item.key
-                    ?
-                    "selected-card"
-                    :
-                    ""
-                  }
-                  actions={[
-                    <EditOutlined
-                      key="edit"
-                      onClick={()=>
-                        editEntry(item.key)
-                      }
-                    />,
-                    <DeleteOutlined
-                      key="delete"
-                      onClick={()=>
-                        deleteEntry(item.key)
-                      }
-                    />
-                  ]}
-                >
-
-                  <div className="entry-header">
-                    <b>
-                      {item.category}
-                    </b>
-
-                    <Tag
-                      color={
-                        item.type==="Income"
-                        ?
-                        "green"
-                        :
-                        "red"
-                      }
-                    >
-                      {item.type}
-                    </Tag>
-                  </div>
-
-
-                  <div>
-                    ₹ {item.amount}
-                  </div>
-
-                  <div>
-                    {item.date?.format(
-                      "DD MMM YYYY"
-                    )}
-                  </div>
-
-
-                  <Tag color="blue">
-                    {item.recurrence}
+                  <Tag color={item.type === "Income" ? "green" : "red"}>
+                    {item.type}
                   </Tag>
+                </div>
 
+                <div>₹ {item.amount}</div>
 
-                  {
-                    item.description &&
-                    <p>
-                      {item.description}
-                    </p>
-                  }
+                <div>{item.date?.format("DD MMM YYYY")}</div>
 
-                </Card>
+                <Tag color="blue">{item.recurrence}</Tag>
 
-              </Col>
-
-            ))
-          }
+                {item.description && <p>{item.description}</p>}
+              </Card>
+            </Col>
+          ))}
         </Row>
-      }
-
+      )}
     </Modal>
   );
 };

@@ -1,5 +1,6 @@
 package com.billbot.billbot.entity.auth;
 
+import com.billbot.billbot.entity.dashboard.IncomeOrExpense;
 import com.billbot.billbot.entity.settings.Settings;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,5 +24,7 @@ public class User {
     private boolean verified;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Settings> settings;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<IncomeOrExpense> incomeOrExpenses;
 
 }
