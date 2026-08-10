@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("dashboard")
+@RequestMapping("/dashboard")
 @RequiredArgsConstructor
 public class Dashboard {
     private final IncomeOrExpenseService incomeOrExpense;
