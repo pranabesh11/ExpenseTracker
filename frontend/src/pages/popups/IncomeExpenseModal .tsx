@@ -27,6 +27,8 @@ import {
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import "./IncomeExpenseModal.css";
+import { getApiData } from "../../shared/api/get-api-data";
+import { ShowSuccessNotification } from "../../utilities/ShowNotifications";
 
 const { TextArea } = Input;
 
@@ -166,6 +168,23 @@ const IncomeExpenseModal: React.FC<Props> = ({ open, onClose }) => {
       formData.append("receipts", file);
     });
     return formData;
+  };
+  const handleSubmit = async () => {
+    if (entries.length === 0) return;
+    const formData = buildPayload();
+    try {
+      const response = await getApiData({
+        endpoint: "/billbot/addIncomeExpense",
+        payload: formData,
+      });
+      if (response?.success) {
+        ShowSuccessNotification("Data saved");
+      }
+      // Optional: close modal after successful submission
+      onClose();
+    } catch (error) {
+      console.error("Submit failed:", error);
+    }
   };
 
   return (
@@ -414,6 +433,18 @@ const IncomeExpenseModal: React.FC<Props> = ({ open, onClose }) => {
           ))}
         </Row>
       )}
+      <Divider />
+      <Space>
+        <Button
+          type="primary"
+          onClick={handleSubmit}
+          disabled={entries.length === 0}
+        >
+          Submit All
+        </Button>
+
+        <Button onClick={onClose}>Cancel</Button>
+      </Space>
     </Modal>
   );
 };

@@ -1,0 +1,25 @@
+import callBaseURLApi, { callMultipartApi } from "../utils/api-client.js";
+import multer from "multer";
+const upload = multer();
+const dashboard = (app) => {
+  app.post("/billbot/addIncomeExpense", upload.any(), async (req, res) => {
+    try {
+      const response = await callMultipartApi(
+        process.env.SAVE_INCOME_OR_EXPENSE,
+        req.body,
+        req.files,
+        req.headers.cookie,
+      );
+      const cookies = response.headers["set-cookie"];
+      if (cookies) {
+        res.setHeader("Set-Cookie", cookies);
+      }
+      res.status(response.status).json(response.data);
+    } catch (error) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  });
+};
+export default dashboard;
