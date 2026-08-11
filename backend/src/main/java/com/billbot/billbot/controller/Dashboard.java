@@ -2,6 +2,7 @@ package com.billbot.billbot.controller;
 
 import com.billbot.billbot.DTO.ApiResponse;
 import com.billbot.billbot.DTO.dashboard.AddIncomeExpenseReq;
+import com.billbot.billbot.DTO.dashboard.GetIncomeExpenseRes;
 import com.billbot.billbot.service.dashboard.IncomeOrExpenseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,10 @@ public class Dashboard {
     public ResponseEntity<ApiResponse<Boolean>> addIncomeExpense(@Valid @RequestPart("data") List<AddIncomeExpenseReq> entries, @RequestPart(value = "receipts", required = false) List<MultipartFile> receipts) throws Exception{
         Boolean isCreated = incomeOrExpense.addIncomeOrExpense(entries, receipts);
         return ResponseEntity.ok( new ApiResponse<>(true, "Income Or Expense Added", isCreated));
+    }
+    @GetMapping("/getIncomeExpense")
+    public ResponseEntity<ApiResponse<GetIncomeExpenseRes>> getIncomeExpense(@Valid long id){
+        GetIncomeExpenseRes response = incomeOrExpense.getIncomeExpenseRes(id);
+        return ResponseEntity.ok(new ApiResponse(true, "", response));
     }
 }

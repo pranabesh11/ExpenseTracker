@@ -1,6 +1,7 @@
     package com.billbot.billbot.service.dashboard;
     
     import com.billbot.billbot.DTO.dashboard.AddIncomeExpenseReq;
+    import com.billbot.billbot.DTO.dashboard.GetIncomeExpenseRes;
     import com.billbot.billbot.entity.auth.User;
     import com.billbot.billbot.entity.dashboard.IncomeOrExpense;
     import com.billbot.billbot.repository.auth.UserRepository;
@@ -74,6 +75,9 @@
             }
             incomeOrExpenseRepository.saveAll(incomeOrExpenses);
             return true;
+        }
+        public GetIncomeExpenseRes getIncomeExpenseRes(long id){
+            return new GetIncomeExpenseRes();
         }
         private boolean validateEntries(List<AddIncomeExpenseReq> entries){
             return entries.stream().allMatch(item -> {
