@@ -1,22 +1,28 @@
     package com.billbot.billbot.service.dashboard;
     
     import com.billbot.billbot.DTO.dashboard.AddIncomeExpenseReq;
+    import com.billbot.billbot.DTO.dashboard.GetIncomeExpenseReq;
     import com.billbot.billbot.DTO.dashboard.GetIncomeExpenseRes;
     import com.billbot.billbot.entity.auth.User;
     import com.billbot.billbot.entity.dashboard.IncomeOrExpense;
     import com.billbot.billbot.repository.auth.UserRepository;
     import com.billbot.billbot.repository.dashboard.IncomeOrExpenseRepository;
     import lombok.RequiredArgsConstructor;
+    import org.springframework.data.domain.Page;
+    import org.springframework.data.domain.PageRequest;
+    import org.springframework.data.domain.Pageable;
+    import org.springframework.data.domain.Sort;
     import org.springframework.stereotype.Service;
     import org.springframework.transaction.annotation.Transactional;
     import org.springframework.web.multipart.MultipartFile;
-    
+
     import java.io.IOException;
     import java.math.BigDecimal;
     import java.nio.file.Files;
     import java.nio.file.Path;
     import java.nio.file.Paths;
     import java.util.ArrayList;
+    import java.util.Date;
     import java.util.List;
     import java.util.UUID;
     
@@ -76,8 +82,39 @@
             incomeOrExpenseRepository.saveAll(incomeOrExpenses);
             return true;
         }
-        public GetIncomeExpenseRes getIncomeExpenseRes(long id){
-            return new GetIncomeExpenseRes();
+        public GetIncomeExpenseRes getIncomeExpenseRes(GetIncomeExpenseReq getIncomeExpenseReq){
+            System.out.println("**************************"+getIncomeExpenseReq.getId()+getIncomeExpenseReq.getStartdate()+getIncomeExpenseReq.getEndDate());
+            User user = userRepository.findById(getIncomeExpenseReq.getId()).orElseThrow();
+            Pageable pageable = PageRequest.of(
+                    getIncomeExpenseReq.getCurrentPage(),
+                    getIncomeExpenseReq.getPageSize(),
+                    Sort.by("date").descending());
+            Page<IncomeOrExpense> result = incomeOrExpenseRepository.findByUserIdAndDateBetween(
+                    getIncomeExpenseReq.getId(),
+                    getIncomeExpenseReq.getStartdate(),
+                    getIncomeExpenseReq.getEndDate(),
+                    pageable
+            );
+            List<GetIncomeExpenseRes.EachRow> rows = result.getContent().stream().map(item -> {
+                GetIncomeExpenseRes.EachRow row = new GetIncomeExpenseRes.EachRow();
+                row.setId(item.getId());
+                row.setCategory(item.getCategory());
+                row.setAmount(item.getAmount());
+                row.setType(item.getType());
+                row.setRecurring(item.getRecurring());
+                row.setDescription(item.getDescription());
+                    if (item.getReceiptUrl() != null) {
+                        row.setReceiptUrl(
+                                "/app/files/" + item.getReceiptUrl()
+                        );
+                    }
+                        return row;
+            }).toList();
+            GetIncomeExpenseRes getIncomeExpenseRes = new GetIncomeExpenseRes();
+            getIncomeExpenseRes.setIncomeAndExpense(rows);
+            getIncomeExpenseRes.setCurrentPage(result.getNumber());
+            getIncomeExpenseRes.setTotalPage(result.getTotalPages());
+            return getIncomeExpenseRes;
         }
         private boolean validateEntries(List<AddIncomeExpenseReq> entries){
             return entries.stream().allMatch(item -> {
