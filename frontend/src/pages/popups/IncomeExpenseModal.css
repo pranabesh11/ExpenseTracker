@@ -22,15 +22,13 @@
   overflow-y: auto;
 }
 
-
 /* Main form card */
 
 .editor-card {
   border-radius: 10px !important;
   border: 1px solid #e5e7eb !important;
   background: #ffffff;
-  box-shadow:
-    0 3px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
 }
 
 .editor-card .ant-card-head {
@@ -48,7 +46,6 @@
   padding: 12px !important;
 }
 
-
 /* Labels */
 
 .expense-modal label {
@@ -59,20 +56,14 @@
   margin-bottom: 3px;
 }
 
-
 /* Compact inputs */
 
-.expense-modal
-.ant-input,
-.expense-modal
-.ant-input-number,
-.expense-modal
-.ant-picker,
-.expense-modal
-.ant-select-selector {
+.expense-modal .ant-input,
+.expense-modal .ant-input-number,
+.expense-modal .ant-picker,
+.expense-modal .ant-select-selector {
   border-radius: 6px !important;
 }
-
 
 /* Description */
 
@@ -80,179 +71,123 @@
   resize: none;
 }
 
-
 /* Divider */
 
 .expense-modal .ant-divider {
   margin: 12px 0;
 }
 
-
 /* Entry cards */
 
-.expense-modal
-.ant-card:not(.editor-card) {
-
+.expense-modal .ant-card:not(.editor-card) {
   border-radius: 10px;
   border: 1px solid #e5e7eb;
 
-  box-shadow:
-    0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
-  transition:
-    all .2s ease;
+  transition: all 0.2s ease;
 
   overflow: hidden;
 }
 
-
-.expense-modal
-.ant-card:not(.editor-card):hover {
-
+.expense-modal .ant-card:not(.editor-card):hover {
   transform: translateY(-2px);
 
-  box-shadow:
-    0 6px 18px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
-
-.expense-modal
-.ant-card:not(.editor-card)
-.ant-card-body {
-
+.expense-modal .ant-card:not(.editor-card) .ant-card-body {
   padding: 10px !important;
-
 }
-
 
 /* Selected card */
 
 .selected-card {
-
   border: 2px solid #1677ff !important;
 
   box-shadow:
-    0 0 0 3px rgba(22,119,255,.12),
-    0 6px 18px rgba(0,0,0,.12) !important;
-
+    0 0 0 3px rgba(22, 119, 255, 0.12),
+    0 6px 18px rgba(0, 0, 0, 0.12) !important;
 }
-
 
 /* Card header */
 
 .entry-header {
+  display: flex;
 
-  display:flex;
+  justify-content: space-between;
 
-  justify-content:space-between;
+  align-items: center;
 
-  align-items:center;
-
-  margin-bottom:6px;
-
+  margin-bottom: 6px;
 }
-
 
 /* Card text */
 
-.expense-modal
-.ant-card:not(.editor-card) p {
+.expense-modal .ant-card:not(.editor-card) p {
+  margin: 5px 0 0;
 
-  margin:5px 0 0;
+  color: #64748b;
 
-  color:#64748b;
+  font-size: 12px;
 
-  font-size:12px;
-
-  line-height:1.4;
-
+  line-height: 1.4;
 }
-
 
 /* Tags */
 
 .expense-modal .ant-tag {
+  margin-inline-end: 0;
 
-  margin-inline-end:0;
+  border-radius: 12px;
 
-  border-radius:12px;
+  font-size: 11px;
 
-  font-size:11px;
-
-  padding:1px 8px;
-
+  padding: 1px 8px;
 }
-
 
 /* Card actions */
 
-.expense-modal
-.ant-card-actions {
+.expense-modal .ant-card-actions {
+  background: #fafafa;
 
-  background:#fafafa;
-
-  border-top:1px solid #f1f5f9;
-
+  border-top: 1px solid #f1f5f9;
 }
 
-
-.expense-modal
-.ant-card-actions > li {
-
-  margin:5px 0;
-
+.expense-modal .ant-card-actions > li {
+  margin: 5px 0;
 }
 
-
-.expense-modal
-.ant-card-actions .anticon {
-
-  font-size:14px;
-
+.expense-modal .ant-card-actions .anticon {
+  font-size: 14px;
 }
-
 
 /* Buttons */
 
-.expense-modal
-.ant-btn {
-
-  border-radius:7px;
-
+.expense-modal .ant-btn {
+  border-radius: 7px;
 }
-
 
 /* Empty */
 
-.expense-modal
-.ant-empty {
+.expense-modal .ant-empty {
+  padding: 20px;
 
-  padding:20px;
+  background: #fff;
 
-  background:#fff;
-
-  border-radius:10px;
-
+  border-radius: 10px;
 }
-
 
 /* Scrollbar */
 
-.expense-modal
-.ant-modal-body::-webkit-scrollbar {
-
-  width:6px;
-
+.expense-modal .ant-modal-body::-webkit-scrollbar {
+  width: 6px;
 }
 
+.expense-modal .ant-modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
 
-.expense-modal
-.ant-modal-body::-webkit-scrollbar-thumb {
-
-  background:#cbd5e1;
-
-  border-radius:10px;
-
+  border-radius: 10px;
 }
 /* Limit category/title text */
 .entry-header b {
@@ -262,11 +197,8 @@
   white-space: nowrap;
 }
 
-
 /* Limit description text */
-.expense-modal
-.ant-card:not(.editor-card) p {
-
+.expense-modal .ant-card:not(.editor-card) p {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -278,7 +210,6 @@
 
   font-size: 12px;
   line-height: 18px;
-
 }
 
 .receipt-upload-box {
@@ -363,47 +294,33 @@
 
 /* Upload button */
 
-.expense-modal
-.ant-upload-wrapper {
+.expense-modal .ant-upload-wrapper {
   width: 100%;
 }
 
-.expense-modal
-.ant-upload-wrapper .ant-btn {
+.expense-modal .ant-upload-wrapper .ant-btn {
   width: 100%;
 }
 /* Mobile */
 
-@media(max-width:768px){
-
-  .expense-modal .ant-card:not(.editor-card)
-  .ant-card-body {
+@media (max-width: 768px) {
+  .expense-modal .ant-card:not(.editor-card) .ant-card-body {
     padding: 8px !important;
   }
-
 
   .entry-header {
     margin-bottom: 4px;
   }
 
-
-  .expense-modal
-  .ant-card:not(.editor-card) {
-
+  .expense-modal .ant-card:not(.editor-card) {
     border-radius: 8px;
   }
 
-
-  .expense-modal
-  .ant-card-actions > li {
-
+  .expense-modal .ant-card-actions > li {
     margin: 3px 0;
   }
 
-
-  .expense-modal
-  .ant-card-actions .anticon {
-
+  .expense-modal .ant-card-actions .anticon {
     font-size: 13px;
   }
   .receipt-upload-box {
@@ -426,6 +343,4 @@
     margin-top: 6px;
     padding-top: 6px;
   }
-
-
 }
