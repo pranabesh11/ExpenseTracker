@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import "./dashboard.css"
-import { Button, Card, DatePicker, Flex, Form, Typography} from "antd";
+import "./dashboard.css";
+import { Button, Card, DatePicker, Flex, Form, Typography } from "antd";
 const { RangePicker } = DatePicker;
 import ReactECharts from "echarts-for-react";
-import { DeleteFilled, EditOutlined, EyeFilled, EyeOutlined } from "@ant-design/icons";
+import {
+  DeleteFilled,
+  EditOutlined,
+  EyeFilled,
+  EyeOutlined,
+} from "@ant-design/icons";
 import IncomeExpenseModal from "../popups/IncomeExpenseModal ";
 import type { ExpenseData } from "../popups/ViewExpenseModal";
 import ViewExpenseModal from "../popups/ViewExpenseModal";
@@ -12,7 +17,9 @@ const Dashboard: React.FC = () => {
   console.log("Dashboard mounted");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
-  const [selectedExpense, setSelectedExpense] = useState<ExpenseData | null>(null);
+  const [selectedExpense, setSelectedExpense] = useState<ExpenseData | null>(
+    null,
+  );
 
   const handleOpen = () => {
     setIsModalOpen(true);
@@ -22,7 +29,7 @@ const Dashboard: React.FC = () => {
     setIsModalOpen(false);
   };
   const handleView = () => {
-  setSelectedExpense({
+    setSelectedExpense({
       id: 1,
       type: "Expense",
       category: "Food",
@@ -72,11 +79,10 @@ const Dashboard: React.FC = () => {
               <RangePicker />
             </Form.Item>
             <Button type="primary">Get Details</Button>
-            <IncomeExpenseModal
-              open={isModalOpen}
-              onClose={handleClose}
-            />
-            <Button type="primary" onClick={handleOpen}>Add Income / Expense</Button>
+            <IncomeExpenseModal open={isModalOpen} onClose={handleClose} />
+            <Button type="primary" onClick={handleOpen}>
+              Add Income / Expense
+            </Button>
           </div>
         </div>
       </div>
@@ -109,18 +115,27 @@ const Dashboard: React.FC = () => {
           <div className="expenseItem">
             <div className="itemInfo">
               <div className="itemName">Food</div>
-              <div className="itemDescription">IMG, originally known as the International Management Group
-                , is an American sports, fashion, events and media company headquartered in New York City.
-                IMG, originally known as the International Management Group
-                , is an American sports, fashion, events and media company headquartered in New York City.
+              <div className="itemDescription">
+                IMG, originally known as the International Management Group , is
+                an American sports, fashion, events and media company
+                headquartered in New York City. IMG, originally known as the
+                International Management Group , is an American sports, fashion,
+                events and media company headquartered in New York City.
               </div>
               <div className="itemAmount">₹12,000</div>
             </div>
 
             <div className="itemActions">
-              <Button size="small" onClick={handleView}> <EyeOutlined /></Button>
-              <Button size="small"><EditOutlined/></Button>
-              <Button size="small" danger><DeleteFilled/></Button>
+              <Button size="small" onClick={handleView}>
+                {" "}
+                <EyeOutlined />
+              </Button>
+              <Button size="small">
+                <EditOutlined />
+              </Button>
+              <Button size="small" danger>
+                <DeleteFilled />
+              </Button>
             </div>
           </div>
         </div>
@@ -183,5 +198,7 @@ const ExpensePie = () => {
     ],
   };
 
-  return <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />;
+  return (
+    <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
+  );
 };

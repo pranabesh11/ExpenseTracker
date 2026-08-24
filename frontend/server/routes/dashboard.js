@@ -21,5 +21,22 @@ const dashboard = (app) => {
       });
     }
   });
+  app.post("/billbot/getIncomeExpense", async (req, res) => {
+    try {
+      const response = await callBaseURLApi(
+        "POST",
+        process.env.GET_SETTINGS_DATA,
+        req.body,
+        req.headers.cookie,
+      );
+      const cookies = response.headers["set-cookie"];
+      if (cookies) {
+        res.setHeader("Set-Cookie", cookies);
+      }
+      res.status(200).json(response.data);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 };
 export default dashboard;
