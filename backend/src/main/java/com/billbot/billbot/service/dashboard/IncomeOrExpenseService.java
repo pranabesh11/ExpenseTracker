@@ -83,7 +83,6 @@
             return true;
         }
         public GetIncomeExpenseRes getIncomeExpenseRes(GetIncomeExpenseReq getIncomeExpenseReq){
-            System.out.println("**************************"+getIncomeExpenseReq.getId()+getIncomeExpenseReq.getStartdate()+getIncomeExpenseReq.getEndDate());
             User user = userRepository.findById(getIncomeExpenseReq.getId()).orElseThrow();
             Pageable pageable = PageRequest.of(
                     getIncomeExpenseReq.getCurrentPage(),

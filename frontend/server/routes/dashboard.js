@@ -25,7 +25,7 @@ const dashboard = (app) => {
     try {
       const response = await callBaseURLApi(
         "POST",
-        process.env.GET_SETTINGS_DATA,
+        process.env.GET_INCOME_OR_EXPENSE,
         req.body,
         req.headers.cookie,
       );

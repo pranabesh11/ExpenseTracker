@@ -5,13 +5,15 @@ import "./ViewExpenseModal.css";
 const { Text } = Typography;
 
 export interface ExpenseData {
-  id?: number;
+  id: number;
   type: string;
   category: string;
   amount: number;
   date: string;
-  paymentMode: string;
+  recurring: string;
   description: string;
+  receiptUrl: string | null;
+  paymentMode: string;
   status?: string;
 }
 
@@ -21,11 +23,7 @@ interface Props {
   data: ExpenseData | null;
 }
 
-const ViewExpenseModal: React.FC<Props> = ({
-  open,
-  onClose,
-  data,
-}) => {
+const ViewExpenseModal: React.FC<Props> = ({ open, onClose, data }) => {
   return (
     <Modal
       open={open}
@@ -57,9 +55,7 @@ const ViewExpenseModal: React.FC<Props> = ({
             <Col span={12}>
               <div className="info-item">
                 <Text className="label">Amount</Text>
-                <Text className="amount">
-                  ₹{data.amount.toLocaleString()}
-                </Text>
+                <Text className="amount">₹{data.amount.toLocaleString()}</Text>
               </div>
             </Col>
 
@@ -88,9 +84,7 @@ const ViewExpenseModal: React.FC<Props> = ({
             <Col span={24}>
               <div className="info-item description-section">
                 <Text className="label">Description</Text>
-                <div className="description">
-                  {data.description || "-"}
-                </div>
+                <div className="description">{data.description || "-"}</div>
               </div>
             </Col>
           </Row>

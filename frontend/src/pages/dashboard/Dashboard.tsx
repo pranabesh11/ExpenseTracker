@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./dashboard.css";
-import { Button, Card, DatePicker, Flex, Form, Typography } from "antd";
+import { Button, Card, DatePicker, Form, Typography } from "antd";
 const { RangePicker } = DatePicker;
 import ReactECharts from "echarts-for-react";
-import {
-  DeleteFilled,
-  EditOutlined,
-  EyeFilled,
-  EyeOutlined,
-} from "@ant-design/icons";
+import dayjs from "dayjs";
+import { DeleteFilled, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import IncomeExpenseModal from "../popups/IncomeExpenseModal ";
-import type { ExpenseData } from "../popups/ViewExpenseModal";
-import ViewExpenseModal from "../popups/ViewExpenseModal";
-
+import ViewExpenseModal, { type ExpenseData } from "../popups/ViewExpenseModal";
+import { getApiData } from "../../shared/api/get-api-data";
+interface IncomeExpense {
+  id: number;
+  category: string;
+  amount: number;
+  type: string;
+  recurring: string;
+  description: string;
+  receiptUrl: string | null;
+}
 const Dashboard: React.FC = () => {
   console.log("Dashboard mounted");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +24,42 @@ const Dashboard: React.FC = () => {
   const [selectedExpense, setSelectedExpense] = useState<ExpenseData | null>(
     null,
   );
+  const [expenses, setExpenses] = useState<ExpenseData[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs]>([
+    dayjs().startOf("month"),
+    dayjs().endOf("month"),
+  ]);
+  useEffect(() => {
+    fetchIncomeExpense();
+  }, []);
+
+  const fetchIncomeExpense = async () => {
+    try {
+      setLoading(true);
+
+      const [startDate, endDate] = dateRange;
+
+      const response = await getApiData({
+        endpoint: "/billbot/getIncomeExpense",
+        payload: {
+          id: 7,
+          startdate: startDate?.format("YYYY-MM-DD"),
+          endDate: endDate?.format("YYYY-MM-DD"),
+          currentPage: 0,
+          pageSize: 5,
+        },
+      });
+      console.log("******************", response.data.data.incomeAndExpense);
+      if (response.data.success) {
+        setExpenses(response.data.data.incomeAndExpense);
+      }
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleOpen = () => {
     setIsModalOpen(true);
@@ -28,18 +68,13 @@ const Dashboard: React.FC = () => {
   const handleClose = () => {
     setIsModalOpen(false);
   };
-  const handleView = () => {
+  const handleView = (expense: IncomeExpense) => {
     setSelectedExpense({
-      id: 1,
-      type: "Expense",
-      category: "Food",
-      amount: 12000,
-      date: "18 June 2025",
-      paymentMode: "UPI",
-      description:
-        "Lunch and dinner expenses with friends. Includes snacks, beverages and dessert.",
-      status: "Completed",
+      ...expense,
+      date: "",
+      paymentMode: "",
     });
+
     setViewOpen(true);
   };
   const data = [
@@ -71,14 +106,20 @@ const Dashboard: React.FC = () => {
             Dashboard
           </Typography.Title>
           <div className="controls">
-            <Form.Item
-              label="Select Date Range"
-              name="datepicker"
-              style={{ marginBottom: 0 }}
-            >
-              <RangePicker />
+            <Form.Item label="Select Date Range" style={{ marginBottom: 0 }}>
+              <RangePicker
+                value={dateRange}
+                allowClear={false}
+                onChange={(dates) => {
+                  if (dates && dates[0] && dates[1]) {
+                    setDateRange([dates[0], dates[1]]);
+                  }
+                }}
+              />
             </Form.Item>
-            <Button type="primary">Get Details</Button>
+            <Button type="primary" onClick={fetchIncomeExpense}>
+              Get Details
+            </Button>
             <IncomeExpenseModal open={isModalOpen} onClose={handleClose} />
             <Button type="primary" onClick={handleOpen}>
               Add Income / Expense
@@ -112,32 +153,39 @@ const Dashboard: React.FC = () => {
             Expense / Income List
           </Typography.Title>
 
-          <div className="expenseItem">
-            <div className="itemInfo">
-              <div className="itemName">Food</div>
-              <div className="itemDescription">
-                IMG, originally known as the International Management Group , is
-                an American sports, fashion, events and media company
-                headquartered in New York City. IMG, originally known as the
-                International Management Group , is an American sports, fashion,
-                events and media company headquartered in New York City.
-              </div>
-              <div className="itemAmount">₹12,000</div>
-            </div>
+          {loading ? (
+            <div>Loading...</div>
+          ) : expenses.length === 0 ? (
+            <div>No income / expense found.</div>
+          ) : (
+            expenses.map((expense) => (
+              <div className="expenseItem" key={expense.id}>
+                <div className="itemInfo">
+                  <div className="itemName">{expense.category}</div>
 
-            <div className="itemActions">
-              <Button size="small" onClick={handleView}>
-                {" "}
-                <EyeOutlined />
-              </Button>
-              <Button size="small">
-                <EditOutlined />
-              </Button>
-              <Button size="small" danger>
-                <DeleteFilled />
-              </Button>
-            </div>
-          </div>
+                  <div className="itemDescription">{expense.description}</div>
+
+                  <div className="itemAmount">
+                    ₹{expense.amount.toLocaleString("en-IN")}
+                  </div>
+                </div>
+
+                <div className="itemActions">
+                  <Button size="small" onClick={() => handleView(expense)}>
+                    <EyeOutlined />
+                  </Button>
+
+                  <Button size="small">
+                    <EditOutlined />
+                  </Button>
+
+                  <Button size="small" danger>
+                    <DeleteFilled />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
       <ViewExpenseModal
