@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
   const [selectedExpense, setSelectedExpense] = useState<ExpenseData | null>(
     null,
   );
-  const [expenses, setExpenses] = useState<ExpenseData[]>([]);
+  const [expenses, setExpenses] = useState<IncomeExpense[]>([]);
   const [loading, setLoading] = useState(false);
   const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs]>([
     dayjs().startOf("month"),
@@ -50,9 +50,13 @@ const Dashboard: React.FC = () => {
           pageSize: 5,
         },
       });
-      console.log("******************", response.data.data.incomeAndExpense);
-      if (response.data.success) {
-        setExpenses(response.data.data.incomeAndExpense);
+      console.log("FULL API RESPONSE:", response);
+      console.log("SUCCESS:", response.success);
+      console.log("LIST:", response.data?.incomeAndExpense);
+      if (response.success) {
+        const incomeAndExpense = response.data?.incomeAndExpense ?? [];
+        console.log("***********", incomeAndExpense);
+        setExpenses(incomeAndExpense);
       }
     } catch (e) {
       console.warn(e);
@@ -97,7 +101,7 @@ const Dashboard: React.FC = () => {
       position: "bottom",
     },
   };
-
+  console.log("EXPENSES STATE:", expenses);
   return (
     <div className="dashboard">
       <div className="details">
