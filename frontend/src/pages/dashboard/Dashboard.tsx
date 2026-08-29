@@ -50,12 +50,8 @@ const Dashboard: React.FC = () => {
           pageSize: 5,
         },
       });
-      console.log("FULL API RESPONSE:", response);
-      console.log("SUCCESS:", response.success);
-      console.log("LIST:", response.data?.incomeAndExpense);
       if (response.success) {
         const incomeAndExpense = response.data?.incomeAndExpense ?? [];
-        console.log("***********", incomeAndExpense);
         setExpenses(incomeAndExpense);
       }
     } catch (e) {
