@@ -1,4 +1,7 @@
 package com.billbot.billbot.repository.chat;
 
-public interface MessageRepository {
+import com.billbot.billbot.entity.chat.Message;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MessageRepository extends JpaRepository<Message, Long> {
 }
