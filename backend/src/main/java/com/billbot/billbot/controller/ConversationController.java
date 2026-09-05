@@ -14,43 +14,19 @@ public class ConversationController {
 
     private final ConversationService conversationService;
 
-    public ConversationController(
-            ConversationService conversationService
-    ) {
+    public ConversationController(ConversationService conversationService) {
         this.conversationService = conversationService;
     }
 
     @PostMapping("/private")
-    public ResponseEntity<ConversationResponse> createPrivateConversation(
-            @RequestParam Long currentUserId,
-            @RequestBody CreatePrivateConversationRequest request
-    ) {
-
-        ConversationResponse response =
-                conversationService.createPrivateConversation(
-                        currentUserId,
-                        request
-                );
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+    public ResponseEntity<ConversationResponse> createPrivateConversation(@RequestParam Long currentUserId, @RequestBody CreatePrivateConversationRequest request) {
+        ConversationResponse response = conversationService.createPrivateConversation(currentUserId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/group")
-    public ResponseEntity<ConversationResponse> createGroupConversation(
-            @RequestParam Long currentUserId,
-            @RequestBody CreateGroupConversationRequest request
-    ) {
-
-        ConversationResponse response =
-                conversationService.createGroupConversation(
-                        currentUserId,
-                        request
-                );
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+    public ResponseEntity<ConversationResponse> createGroupConversation(@RequestParam Long currentUserId,@RequestBody CreateGroupConversationRequest request) {
+        ConversationResponse response = conversationService.createGroupConversation(currentUserId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
