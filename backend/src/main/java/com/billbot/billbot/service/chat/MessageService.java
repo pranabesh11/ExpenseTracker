@@ -20,11 +20,7 @@ public class MessageService {
     private final ConversationRepository conversationRepository;
     private final UserRepository userRepository;
 
-    public MessageService(
-            MessageRepository messageRepository,
-            ConversationRepository conversationRepository,
-            UserRepository userRepository
-    ) {
+    public MessageService(MessageRepository messageRepository, ConversationRepository conversationRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
         this.conversationRepository = conversationRepository;
         this.userRepository = userRepository;
@@ -32,31 +28,18 @@ public class MessageService {
 
     @Transactional
     public ChatMessage sendMessage(Long chatId, ChatMessage message) {
-
-        Conversation conversation = conversationRepository.findById(chatId)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Conversation not found: " + chatId)
-                );
-
-        User sender = userRepository.findById(message.getSenderId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException("User not found: " + message.getSenderId())
-                );
-
+        Conversation conversation = conversationRepository.findById(chatId).orElseThrow(() -> new EntityNotFoundException("Conversation not found: " + chatId));
+        User sender = userRepository.findById(message.getSenderId()).orElseThrow(() -> new EntityNotFoundException("User not found: " + message.getSenderId()));
         Message entity = new Message();
-
         entity.setConversation(conversation);
         entity.setSender(sender);
         entity.setContent(message.getContent());
         entity.setCreatedAt(LocalDateTime.now());
-
         Message savedMessage = messageRepository.save(entity);
-
         ChatMessage response = new ChatMessage();
         response.setSenderId(savedMessage.getSender().getId());
         response.setChatId(savedMessage.getConversation().getId());
         response.setContent(savedMessage.getContent());
-
         return response;
     }
 }

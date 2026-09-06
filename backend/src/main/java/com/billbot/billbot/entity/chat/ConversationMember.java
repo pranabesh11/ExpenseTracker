@@ -10,16 +10,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(
-        name = "conversation_members",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        columnNames = {"conversation_id", "user_id"}
-                )
-        }
-)
+@Table(name = "conversation_members", uniqueConstraints = {@UniqueConstraint(columnNames = {"conversation_id", "user_id"})})
 public class ConversationMember {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,8 +26,6 @@ public class ConversationMember {
 
     @Column(nullable = false)
     private long unreadCount = 0;
-
     private Long lastReadMessageId;
-
     private LocalDateTime joinedAt;
 }
