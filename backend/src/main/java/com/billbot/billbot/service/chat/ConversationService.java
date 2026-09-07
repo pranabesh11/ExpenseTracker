@@ -109,4 +109,18 @@ public class ConversationService {
                 memberIds
         );
     }
+    @Transactional(readOnly = true)
+    public List<ConversationResponse> getUserConversations(Long userId) {
+
+        // Make sure the user exists
+        findUser(userId);
+
+        List<ConversationMember> memberships =
+                memberRepository.findByUserId(userId);
+
+        return memberships.stream()
+                .map(ConversationMember::getConversation)
+                .map(this::toResponse)
+                .toList();
+    }
 }

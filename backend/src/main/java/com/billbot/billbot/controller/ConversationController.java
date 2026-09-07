@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/conversations")
 public class ConversationController {
@@ -28,5 +30,15 @@ public class ConversationController {
     public ResponseEntity<ConversationResponse> createGroupConversation(@RequestParam Long currentUserId,@RequestBody CreateGroupConversationRequest request) {
         ConversationResponse response = conversationService.createGroupConversation(currentUserId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    @GetMapping
+    public ResponseEntity<List<ConversationResponse>> getUserConversations(
+            @RequestParam Long userId
+    ) {
+
+        List<ConversationResponse> conversations =
+                conversationService.getUserConversations(userId);
+
+        return ResponseEntity.ok(conversations);
     }
 }
