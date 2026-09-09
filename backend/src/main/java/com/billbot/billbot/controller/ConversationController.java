@@ -41,4 +41,19 @@ public class ConversationController {
 
         return ResponseEntity.ok(conversations);
     }
+    @PutMapping("/{conversationId}/read")
+    public ResponseEntity<Void> markAsRead(
+            @PathVariable Long conversationId,
+            @RequestParam Long userId,
+            @RequestParam Long lastReadMessageId
+    ) {
+
+        conversationService.markAsRead(
+                conversationId,
+                userId,
+                lastReadMessageId
+        );
+
+        return ResponseEntity.noContent().build();
+    }
 }

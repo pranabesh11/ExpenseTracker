@@ -44,7 +44,7 @@ public class ConversationService {
         Conversation savedConversation = conversationRepository.save(conversation);
         addMember(savedConversation, currentUser);
         addMember(savedConversation, otherUser);
-        return toResponse(savedConversation);
+        return toResponse(savedConversation, currentUserId);
     }
 
     @Transactional
@@ -75,7 +75,7 @@ public class ConversationService {
             User user = findUser(userId);
             addMember(savedConversation, user);
         }
-        return toResponse(savedConversation);
+        return toResponse(savedConversation, currentUserId);
     }
 
     private User findUser(Long userId) {
@@ -96,17 +96,34 @@ public class ConversationService {
     }
 
     private ConversationResponse toResponse(
-            Conversation conversation
+            Conversation conversation,
+            Long userId
     ) {
 
-        List<ConversationMember> members = memberRepository.findByConversationId( conversation.getId());
-        List<Long> memberIds = members.stream().map(member -> member.getUser().getId()).toList();
+        List<ConversationMember> members =
+                memberRepository.findByConversationId(
+                        conversation.getId()
+                );
+
+        List<Long> memberIds = members.stream()
+                .map(member -> member.getUser().getId())
+                .toList();
+
+        long unreadCount = members.stream()
+                .filter(member ->
+                        member.getUser().getId().equals(userId)
+                )
+                .mapToLong(ConversationMember::getUnreadCount)
+                .findFirst()
+                .orElse(0);
+
         return new ConversationResponse(
                 conversation.getId(),
                 conversation.getType(),
                 conversation.getName(),
                 conversation.getCreatedAt(),
-                memberIds
+                memberIds,
+                unreadCount
         );
     }
     @Transactional(readOnly = true)
@@ -120,7 +137,16 @@ public class ConversationService {
 
         return memberships.stream()
                 .map(ConversationMember::getConversation)
-                .map(this::toResponse)
-                .toList();
+                .map(conversation ->
+                        toResponse(conversation, userId)
+                ).toList();
+    }
+    @Transactional
+    public void markAsRead(Long conversationId, Long userId, Long lastReadMessageId) {
+        ConversationMember member = memberRepository.findByConversationIdAndUserId(conversationId,userId).orElseThrow(() ->
+                                new EntityNotFoundException("User is not a member of this conversation"));
+        member.setUnreadCount(0);
+        member.setLastReadMessageId(lastReadMessageId);
+        memberRepository.save(member);
     }
 }

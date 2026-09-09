@@ -33,4 +33,5 @@ public interface ConversationMemberRepository
        AND COUNT(CASE WHEN cm.user.id IN :userIds THEN 1 END) = 2
 """)
     List<Long> findPrivateConversationIds(@Param("userIds") List<Long> userIds);
+
 }

@@ -15,4 +15,5 @@ public class ConversationResponse {
     private String name;
     private LocalDateTime createdAt;
     private List<Long> memberIds;
+    private long unreadCount;
 }

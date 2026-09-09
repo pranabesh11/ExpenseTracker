@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class ChatController {
+
     private final MessageService messageService;
 
     public ChatController(MessageService messageService) {
@@ -17,7 +18,14 @@ public class ChatController {
 
     @MessageMapping("/chat/{chatId}")
     @SendTo("/topic/chat/{chatId}")
-    public ChatMessage sendMessage(@DestinationVariable Long chatId, ChatMessage message) {
-        return messageService.sendMessage(chatId, message);
+    public ChatMessage sendMessage(
+            @DestinationVariable Long chatId,
+            ChatMessage message
+    ) {
+
+        return messageService.sendMessage(
+                chatId,
+                message
+        );
     }
 }
